@@ -7,6 +7,7 @@ const path = require('path');
 // Import routes
 const authRoutes = require('./routes/authRoutes');
 const patientRoutes = require('./routes/patientRoutes');
+const consultationRoutes = require('./routes/consultationRoutes');
 const doctorRoutes = require('./routes/doctorRoutes');
 const billingRoutes = require('./routes/billingRoutes');
 const pharmacyRoutes = require('./routes/pharmacyRoutes');
@@ -34,6 +35,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/patients', patientRoutes);
+app.use('/api/consultations', consultationRoutes);
 app.use('/api/doctors', doctorRoutes);
 app.use('/api/billing', billingRoutes);
 app.use('/api/pharmacy', pharmacyRoutes);

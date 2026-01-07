@@ -13,6 +13,8 @@ import PatientList from './components/Patients/PatientList';
 import PatientForm from './components/Patients/PatientForm';
 import BillingList from './components/Billing/BillingList';
 import BillingForm from './components/Billing/BillingForm';
+import ConsultationList from './components/Consultation/ConsultationList';
+import ConsultationForm from './components/Consultation/ConsultationForm';
 import PharmacyDashboard from './components/Pharmacy/PharmacyDashboard';
 import LaboratoryDashboard from './components/Laboratory/LaboratoryDashboard';
 import Navbar from './components/Layout/Navbar';
@@ -36,6 +38,9 @@ function AppLayout() {
           <Route path="/patients" element={<PrivateRoute><PatientList /></PrivateRoute>} />
           <Route path="/patients/new" element={<PrivateRoute><PatientForm /></PrivateRoute>} />
           <Route path="/patients/edit/:id" element={<PrivateRoute><PatientForm /></PrivateRoute>} />
+          <Route path="/consultations" element={<PrivateRoute><ConsultationList /></PrivateRoute>} />
+          <Route path="/consultations/new" element={<PrivateRoute><ConsultationForm /></PrivateRoute>} />
+          <Route path="/consultations/edit/:id" element={<PrivateRoute><ConsultationForm /></PrivateRoute>} />
           <Route path="/billing" element={<PrivateRoute><BillingList /></PrivateRoute>} />
           <Route path="/billing/new" element={<PrivateRoute><BillingForm /></PrivateRoute>} />
           <Route path="/pharmacy" element={<PrivateRoute><PharmacyDashboard /></PrivateRoute>} />

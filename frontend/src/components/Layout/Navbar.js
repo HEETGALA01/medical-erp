@@ -25,16 +25,17 @@ const Navbar = () => {
         </Link>
         
         <ul className="navbar-links">
-          <li><Link to="/">📊 Dashboard</Link></li>
-          <li><Link to="/patients">👥 Patients</Link></li>
+          <li><Link to="/">Dashboard</Link></li>
+          <li><Link to="/patients">Patients</Link></li>
+          <li><Link to="/consultations">Patient Records</Link></li>
           {(user?.role === 'Admin' || user?.role === 'Receptionist') && (
-            <li><Link to="/billing">💰 Billing</Link></li>
+            <li><Link to="/billing">Billing</Link></li>
           )}
           {(user?.role === 'Admin' || user?.role === 'Pharmacist') && (
-            <li><Link to="/pharmacy">💊 Pharmacy</Link></li>
+            <li><Link to="/pharmacy">Pharmacy</Link></li>
           )}
           {(user?.role === 'Admin' || user?.role === 'Lab Technician') && (
-            <li><Link to="/laboratory">🔬 Laboratory</Link></li>
+            <li><Link to="/laboratory">Laboratory</Link></li>
           )}
         </ul>
         
