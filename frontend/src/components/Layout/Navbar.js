@@ -27,7 +27,6 @@ const Navbar = () => {
         <ul className="navbar-links">
           <li><Link to="/">📊 Dashboard</Link></li>
           <li><Link to="/patients">👥 Patients</Link></li>
-          <li><Link to="/appointments">📅 Appointments</Link></li>
           {(user?.role === 'Admin' || user?.role === 'Receptionist') && (
             <li><Link to="/billing">💰 Billing</Link></li>
           )}

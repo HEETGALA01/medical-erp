@@ -47,17 +47,6 @@ const Dashboard = () => {
       </div>
 
       <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-header">
-            <div className="stat-content">
-              <h3>Today's Appointments</h3>
-              <div className="stat-value">{stats.todayAppointments || 0}</div>
-              <div className="stat-change positive">↗ +12% from yesterday</div>
-            </div>
-            <div className="stat-icon">📅</div>
-          </div>
-        </div>
-
         <div className="stat-card success">
           <div className="stat-header">
             <div className="stat-content">
@@ -102,11 +91,6 @@ const Dashboard = () => {
             <h3>New Patient</h3>
             <p>Register a new patient</p>
           </Link>
-          <Link to="/appointments/new" className="action-card">
-            <div className="action-icon">📅</div>
-            <h3>New Appointment</h3>
-            <p>Schedule an appointment</p>
-          </Link>
           {(user?.role === 'Admin' || user?.role === 'Receptionist') && (
             <Link to="/billing/new" className="action-card">
               <div className="action-icon">💳</div>
@@ -119,50 +103,6 @@ const Dashboard = () => {
             <h3>View Patients</h3>
             <p>Browse patient records</p>
           </Link>
-        </div>
-      </div>
-
-      <div className="dashboard-section">
-        <div className="section-header">
-          <h2>Recent Appointments</h2>
-          <Link to="/appointments" className="btn btn-secondary">View All →</Link>
-        </div>
-        <div className="data-table-container">
-          {recentAppointments && recentAppointments.length > 0 ? (
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>Appointment ID</th>
-                  <th>Patient</th>
-                  <th>Doctor</th>
-                  <th>Time</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentAppointments.map((apt) => (
-                  <tr key={apt._id || apt.appointmentId}>
-                    <td>{apt.appointmentId}</td>
-                    <td>{apt.patient?.firstName} {apt.patient?.lastName}</td>
-                    <td>{apt.doctor?.fullName || 'N/A'}</td>
-                    <td>{apt.timeSlot || 'N/A'}</td>
-                    <td>
-                      <span className={`badge badge-${apt.status === 'Completed' ? 'success' : apt.status === 'Scheduled' ? 'info' : 'warning'}`}>
-                        {apt.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <div className="empty-state">
-              <div className="empty-state-icon">📅</div>
-              <h3>No Recent Appointments</h3>
-              <p>There are no appointments scheduled for today.</p>
-              <Link to="/appointments/new" className="btn btn-primary">Schedule Appointment</Link>
-            </div>
-          )}
         </div>
       </div>
     </div>

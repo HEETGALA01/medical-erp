@@ -32,54 +32,130 @@ const Login = () => {
 
   return (
     <div className="auth-container">
+      <div className="auth-particles">
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+        <div className="particle"></div>
+      </div>
+      
       <div className="login-card">
         <div className="auth-logo">
-          <div className="logo-icon">🏥</div>
-          <h1>Medical Management</h1>
-          <p>Hospital & Clinic Management System</p>
-          <span className="demo-badge">✨ DEMO MODE</span>
+          <div className="logo-icon-wrapper">
+            <div className="logo-icon">🏥</div>
+            <div className="logo-glow"></div>
+          </div>
+          <h1>Medical ERP System</h1>
+          <p className="subtitle">Complete Hospital Management Solution</p>
+          <span className="demo-badge">
+            <span className="badge-icon">✨</span>
+            <span className="badge-text">DEMO MODE</span>
+          </span>
         </div>
         
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label>👤 Username</label>
-            <input
-              type="text"
-              name="username"
-              value={credentials.username}
-              onChange={handleChange}
-              required
-              placeholder="Enter any username"
-            />
+            <label>
+              <span className="label-icon">👤</span>
+              <span className="label-text">Username</span>
+            </label>
+            <div className="input-wrapper">
+              <input
+                type="text"
+                name="username"
+                value={credentials.username}
+                onChange={handleChange}
+                required
+                placeholder="Enter username"
+                autoComplete="username"
+              />
+              <span className="input-focus-border"></span>
+            </div>
           </div>
           
           <div className="form-group">
-            <label>🔒 Password</label>
-            <input
-              type="password"
-              name="password"
-              value={credentials.password}
-              onChange={handleChange}
-              required
-              placeholder="Enter any password"
-            />
+            <label>
+              <span className="label-icon">🔒</span>
+              <span className="label-text">Password</span>
+            </label>
+            <div className="input-wrapper">
+              <input
+                type="password"
+                name="password"
+                value={credentials.password}
+                onChange={handleChange}
+                required
+                placeholder="Enter password"
+                autoComplete="current-password"
+              />
+              <span className="input-focus-border"></span>
+            </div>
           </div>
           
           <button type="submit" className="btn-login" disabled={loading}>
-            {loading ? '⏳ Logging in...' : '🚀 Login to Dashboard'}
+            {loading ? (
+              <>
+                <span className="spinner-small"></span>
+                <span>Logging in...</span>
+              </>
+            ) : (
+              <>
+                <span className="btn-icon">🚀</span>
+                <span>Login to Dashboard</span>
+                <span className="btn-arrow">→</span>
+              </>
+            )}
           </button>
         </form>
         
-        <div className="demo-info">
-          <h3>🎯 Demo Mode Features:</h3>
-          <ul>
-            <li>No backend or database needed</li>
-            <li>Login with any credentials</li>
-            <li>Explore all 6 modules with sample data</li>
-            <li>Add & view patients in real-time</li>
-            <li>Indian currency formatting (₹)</li>
-            <li>Professional healthcare UI</li>
-          </ul>
+        <div className="divider">
+          <span className="divider-text">Quick Access</span>
+        </div>
+        
+        <div className="demo-credentials">
+          <div className="credentials-grid">
+            <div className="credential-card">
+              <div className="credential-icon">👨‍⚕️</div>
+              <div className="credential-info">
+                <span className="credential-label">Admin</span>
+                <span className="credential-value">admin / admin123</span>
+              </div>
+            </div>
+            <div className="credential-card">
+              <div className="credential-icon">👨‍⚕️</div>
+              <div className="credential-info">
+                <span className="credential-label">Doctor</span>
+                <span className="credential-value">doctor / doctor123</span>
+              </div>
+            </div>
+            <div className="credential-card">
+              <div className="credential-icon">🧪</div>
+              <div className="credential-info">
+                <span className="credential-label">Test</span>
+                <span className="credential-value">test / test</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="features-list">
+          <div className="feature-item">
+            <span className="feature-icon">✅</span>
+            <span className="feature-text">6 Complete Modules</span>
+          </div>
+          <div className="feature-item">
+            <span className="feature-icon">💾</span>
+            <span className="feature-text">Data Persistence</span>
+          </div>
+          <div className="feature-item">
+            <span className="feature-icon">₹</span>
+            <span className="feature-text">Indian Currency</span>
+          </div>
+          <div className="feature-item">
+            <span className="feature-icon">🎨</span>
+            <span className="feature-text">Modern UI/UX</span>
+          </div>
         </div>
       </div>
     </div>

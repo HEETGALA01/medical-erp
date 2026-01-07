@@ -84,52 +84,12 @@ const defaultPatients = [
 
 export const mockPatients = getStoredData('patients', defaultPatients);
 
-const defaultAppointments = [
-  {
-    _id: 'A001',
-    appointmentId: 'APT000001',
-    patient: mockPatients[0],
-    doctor: { fullName: 'Dr. Anjali Mehta', specialization: 'General Physician' },
-    appointmentDate: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
-    timeSlot: '10:00 AM',
-    type: 'Consultation',
-    status: 'Scheduled',
-    reason: 'Regular checkup',
-    createdAt: '2024-03-01T08:00:00Z'
-  },
-  {
-    _id: 'A002',
-    appointmentId: 'APT000002',
-    patient: mockPatients[1],
-    doctor: { fullName: 'Dr. Suresh Patel', specialization: 'Diabetologist' },
-    appointmentDate: new Date().toISOString(), // Today
-    timeSlot: '02:00 PM',
-    type: 'Follow-up',
-    status: 'Completed',
-    reason: 'Diabetes follow-up',
-    createdAt: '2024-02-28T10:00:00Z'
-  },
-  {
-    _id: 'A003',
-    appointmentId: 'APT000003',
-    patient: mockPatients[2],
-    doctor: { fullName: 'Dr. Kavita Singh', specialization: 'Cardiologist' },
-    appointmentDate: new Date(Date.now() + 172800000).toISOString(), // Day after tomorrow
-    timeSlot: '11:30 AM',
-    type: 'Consultation',
-    status: 'Scheduled',
-    reason: 'Chest pain evaluation',
-    createdAt: '2024-03-02T14:00:00Z'
-  }
-];
-
-export const mockAppointments = getStoredData('appointments', defaultAppointments);
-
 const defaultBillings = [
   {
     _id: 'B001',
     billNumber: 'BILL000001',
-    patient: mockPatients[1],
+    patientId: 'P002',
+    patientName: 'Priya Sharma',
     items: [
       { description: 'Consultation Fee', quantity: 1, rate: 500, amount: 500 },
       { description: 'HbA1c Test', quantity: 1, rate: 800, amount: 800 },
@@ -138,16 +98,17 @@ const defaultBillings = [
     subtotal: 1450,
     tax: 0,
     discount: 50,
-    totalAmount: 1400,
-    amountPaid: 1400,
+    total: 1400,
     paymentMethod: 'UPI',
     paymentStatus: 'Paid',
+    date: '2024-03-01',
     createdAt: '2024-03-01T15:30:00Z'
   },
   {
     _id: 'B002',
     billNumber: 'BILL000002',
-    patient: mockPatients[0],
+    patientId: 'P001',
+    patientName: 'Rajesh Kumar',
     items: [
       { description: 'Consultation Fee', quantity: 1, rate: 500, amount: 500 },
       { description: 'ECG', quantity: 1, rate: 300, amount: 300 }
@@ -155,10 +116,10 @@ const defaultBillings = [
     subtotal: 800,
     tax: 0,
     discount: 0,
-    totalAmount: 800,
-    amountPaid: 800,
+    total: 800,
     paymentMethod: 'Cash',
     paymentStatus: 'Paid',
+    date: '2024-02-28',
     createdAt: '2024-02-28T16:00:00Z'
   }
 ];
@@ -279,10 +240,8 @@ export const getAllPatients = () => {
 };
 
 export const mockDashboardStats = {
-  todayAppointments: 12,
   todayPatients: 8,
   pendingBills: 3,
   totalRevenue: 45600,
-  recentAppointments: mockAppointments.slice(0, 5),
   recentPatients: mockPatients.slice(0, 5)
 };
