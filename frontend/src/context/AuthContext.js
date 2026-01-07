@@ -38,19 +38,24 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (username, password) => {
-    try {
-      const response = await axios.post('/api/auth/login', { username, password });
-      const { token, user } = response.data;
-      localStorage.setItem('token', token);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setUser(user);
-      return { success: true };
-    } catch (error) {
-      return { 
-        success: false, 
-        message: error.response?.data?.message || 'Login failed' 
+    // DEMO MODE - Bypass backend authentication
+    if (username && password) {
+      const mockUser = {
+        _id: 'demo123',
+        username: username,
+        email: 'demo@clinic.com',
+        role: 'Admin',
+        fullName: 'Demo Admin User',
+        phoneNumber: '+91 98765 43210'
       };
+      localStorage.setItem('token', 'demo-token-123');
+      setUser(mockUser);
+      return { success: true };
     }
+    return { 
+      success: false, 
+      message: 'Please enter username and password' 
+    };
   };
 
   const logout = () => {

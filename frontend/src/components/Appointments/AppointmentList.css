@@ -1,0 +1,2 @@
+/* Appointments List Styles - Inherits from PatientList.css */
+@import '../Patients/PatientList.css';

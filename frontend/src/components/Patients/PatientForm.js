@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { addMockPatient } from '../../data/mockData';
+import './PatientForm.css';
 
 const PatientForm = () => {
   const navigate = useNavigate();
@@ -35,12 +37,29 @@ const PatientForm = () => {
   }, [id]);
 
   const fetchPatient = async () => {
-    try {
-      const response = await axios.get(`/api/patients/${id}`);
-      setFormData(response.data.patient);
-    } catch (error) {
-      toast.error('Error fetching patient');
-    }
+    // DEMO MODE - Mock patient data for editing
+    toast.info('Loading patient data... (Demo Mode)');
+    setTimeout(() => {
+      setFormData({
+        fullName: 'Sample Patient',
+        dateOfBirth: '1990-01-01',
+        gender: 'Male',
+        phoneNumber: '+91 98765 43210',
+        email: 'patient@example.com',
+        address: {
+          street: '123 Sample Street',
+          city: 'Mumbai',
+          state: 'Maharashtra',
+          pincode: '400001'
+        },
+        bloodGroup: 'O+',
+        emergencyContact: {
+          name: 'Emergency Contact',
+          relationship: 'Spouse',
+          phoneNumber: '+91 98765 43211'
+        }
+      });
+    }, 300);
   };
 
   const handleChange = (e) => {
@@ -58,17 +77,47 @@ const PatientForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // DEMO MODE - Add patient to localStorage
     try {
       if (isEdit) {
-        await axios.put(`/api/patients/${id}`, formData);
-        toast.success('Patient updated successfully');
+        toast.success('✅ Patient updated successfully! (Demo Mode)', {
+          position: 'top-center',
+          autoClose: 2000
+        });
       } else {
-        await axios.post('/api/patients', formData);
-        toast.success('Patient registered successfully');
+        // Split fullName into firstName and lastName
+        const nameParts = formData.fullName.trim().split(' ');
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || '';
+        
+        const patientData = {
+          firstName,
+          lastName,
+          dateOfBirth: formData.dateOfBirth,
+          gender: formData.gender,
+          phoneNumber: formData.phoneNumber,
+          email: formData.email,
+          address: formData.address.street + ', ' + formData.address.city + ', ' + formData.address.state + ' ' + formData.address.pincode,
+          bloodGroup: formData.bloodGroup,
+          emergencyContact: formData.emergencyContact,
+          allergies: [],
+          chronicConditions: []
+        };
+        
+        const newPatient = addMockPatient(patientData);
+        
+        toast.success(`✅ Patient registered successfully! Patient ID: ${newPatient.patientId}`, {
+          position: 'top-center',
+          autoClose: 3000
+        });
       }
-      navigate('/patients');
+      
+      setTimeout(() => {
+        navigate('/patients');
+      }, 1000);
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Error saving patient');
+      toast.error('Error saving patient: ' + error.message);
     }
   };
 

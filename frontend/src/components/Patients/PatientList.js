@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { exportToCSV, formatDate, calculateAge } from '../../utils/helpers';
+import { getAllPatients } from '../../data/mockData';
+import './PatientList.css';
 
 const PatientList = () => {
   const [patients, setPatients] = useState([]);
@@ -14,20 +16,25 @@ const PatientList = () => {
   }, [search]);
 
   const fetchPatients = async () => {
-    try {
-      const response = await axios.get(`/api/patients?search=${search}`);
-      setPatients(response.data.patients);
-    } catch (error) {
-      toast.error('Error fetching patients');
-    } finally {
+    // DEMO MODE - Get patients from localStorage with search filter
+    setLoading(true);
+    setTimeout(() => {
+      const allPatients = getAllPatients();
+      const filtered = allPatients.filter(p => 
+        !search || 
+        (p.firstName && p.firstName.toLowerCase().includes(search.toLowerCase())) ||
+        (p.lastName && p.lastName.toLowerCase().includes(search.toLowerCase())) ||
+        (p.patientId && p.patientId.toLowerCase().includes(search.toLowerCase()))
+      );
+      setPatients(filtered);
       setLoading(false);
-    }
+    }, 300);
   };
 
   const handleExport = () => {
     const exportData = patients.map(p => ({
       'Patient ID': p.patientId,
-      'Name': p.fullName,
+      'Name': `${p.firstName || ''} ${p.lastName || ''}`.trim(),
       'Age': calculateAge(p.dateOfBirth),
       'Gender': p.gender,
       'Phone': p.phoneNumber,
@@ -36,73 +43,97 @@ const PatientList = () => {
       'Registered': formatDate(p.createdAt)
     }));
     exportToCSV(exportData, 'patients');
+    toast.success('Exported successfully!');
   };
 
-  if (loading) return <div className="loading">Loading patients...</div>;
+  if (loading) {
+    return (
+      <div className="dashboard-loading">
+        <div className="spinner"></div>
+        <p>Loading patients...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="container">
+    <div className="container list-page-container">
       <div className="page-header">
-        <h1>Patients</h1>
-        <div className="header-actions">
+        <div className="page-title">
+          <span className="title-icon">👥</span>
+          <h1>Patient Records</h1>
+        </div>
+        <div className="page-actions">
           <button onClick={handleExport} className="btn btn-secondary">
             📥 Export CSV
           </button>
           <Link to="/patients/new" className="btn btn-primary">
-            ➕ Add Patient
+            ➕ Add New Patient
           </Link>
         </div>
       </div>
 
-      <div className="card">
-        <div className="search-box">
-          <input
-            type="text"
-            placeholder="Search by name, ID, or phone..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="search-input"
-          />
+      <div className="search-filter-bar">
+        <div className="search-group">
+          <div className="search-input">
+            <input
+              type="text"
+              placeholder="🔍 Search by name, ID, or phone..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
         </div>
+      </div>
 
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Patient ID</th>
-              <th>Name</th>
-              <th>Age/Gender</th>
-              <th>Phone</th>
-              <th>Blood Group</th>
-              <th>Registered</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {patients.length > 0 ? (
-              patients.map((patient) => (
+      <div className="data-table-container">
+        {patients.length > 0 ? (
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Patient ID</th>
+                <th>Full Name</th>
+                <th>Age / Gender</th>
+                <th>Phone Number</th>
+                <th>Blood Group</th>
+                <th>Registered Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {patients.map((patient) => (
                 <tr key={patient._id}>
-                  <td>{patient.patientId}</td>
-                  <td>{patient.fullName}</td>
-                  <td>{calculateAge(patient.dateOfBirth)} / {patient.gender}</td>
+                  <td><strong>{patient.patientId}</strong></td>
+                  <td>{patient.firstName} {patient.lastName}</td>
+                  <td>{calculateAge(patient.dateOfBirth)} years / {patient.gender}</td>
                   <td>{patient.phoneNumber}</td>
-                  <td>{patient.bloodGroup || '-'}</td>
+                  <td>
+                    <span className="badge badge-primary">{patient.bloodGroup || 'N/A'}</span>
+                  </td>
                   <td>{formatDate(patient.createdAt)}</td>
                   <td>
-                    <Link to={`/patients/edit/${patient._id}`} className="btn btn-sm">
-                      Edit
-                    </Link>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <Link to={`/patients/edit/${patient._id}`} className="btn-icon btn-view" title="View Details">
+                        👁️
+                      </Link>
+                      <Link to={`/patients/edit/${patient._id}`} className="btn-icon btn-edit" title="Edit">
+                        ✏️
+                      </Link>
+                    </div>
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7" style={{ textAlign: 'center' }}>
-                  No patients found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <div className="no-results">
+            <div className="no-results-icon">🔍</div>
+            <h3>No Patients Found</h3>
+            <p>No patients match your search criteria. Try adjusting your search or add a new patient.</p>
+            <Link to="/patients/new" className="btn btn-primary">
+              ➕ Add First Patient
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );

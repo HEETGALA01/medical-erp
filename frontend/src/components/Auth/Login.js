@@ -31,45 +31,55 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className="auth-container">
       <div className="login-card">
-        <h2>Medical Management System</h2>
-        <p className="subtitle">Login to continue</p>
+        <div className="auth-logo">
+          <div className="logo-icon">🏥</div>
+          <h1>Medical Management</h1>
+          <p>Hospital & Clinic Management System</p>
+          <span className="demo-badge">✨ DEMO MODE</span>
+        </div>
         
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label>Username</label>
+            <label>👤 Username</label>
             <input
               type="text"
               name="username"
               value={credentials.username}
               onChange={handleChange}
               required
-              placeholder="Enter your username"
+              placeholder="Enter any username"
             />
           </div>
           
           <div className="form-group">
-            <label>Password</label>
+            <label>🔒 Password</label>
             <input
               type="password"
               name="password"
               value={credentials.password}
               onChange={handleChange}
               required
-              placeholder="Enter your password"
+              placeholder="Enter any password"
             />
           </div>
           
-          <button type="submit" className="btn btn-primary btn-block" disabled={loading}>
-            {loading ? 'Logging in...' : 'Login'}
+          <button type="submit" className="btn-login" disabled={loading}>
+            {loading ? '⏳ Logging in...' : '🚀 Login to Dashboard'}
           </button>
         </form>
         
-        <div className="demo-credentials">
-          <p><strong>Demo Credentials:</strong></p>
-          <p>Admin: admin / admin123</p>
-          <p>Doctor: doctor1 / doctor123</p>
+        <div className="demo-info">
+          <h3>🎯 Demo Mode Features:</h3>
+          <ul>
+            <li>No backend or database needed</li>
+            <li>Login with any credentials</li>
+            <li>Explore all 6 modules with sample data</li>
+            <li>Add & view patients in real-time</li>
+            <li>Indian currency formatting (₹)</li>
+            <li>Professional healthcare UI</li>
+          </ul>
         </div>
       </div>
     </div>

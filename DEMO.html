@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Management System - Demo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .login-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .login-box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 400px; width: 100%; }
+        .logo { text-align: center; margin-bottom: 30px; }
+        .logo h1 { color: #667eea; font-size: 28px; margin-bottom: 5px; }
+        .logo p { color: #666; font-size: 14px; }
+        .demo-badge { background: #fbbf24; color: #78350f; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; display: inline-block; margin-top: 10px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 5px; color: #333; font-weight: 500; }
+        .form-group input { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; transition: border-color 0.3s; }
+        .form-group input:focus { outline: none; border-color: #667eea; }
+        .btn-login { width: 100%; padding: 14px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
+        .btn-login:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3); }
+        .demo-info { margin-top: 20px; padding: 15px; background: #f0fdf4; border-left: 4px solid #22c55e; border-radius: 8px; }
+        .demo-info h3 { color: #166534; font-size: 14px; margin-bottom: 8px; }
+        .demo-info ul { list-style: none; font-size: 13px; color: #166534; }
+        .demo-info ul li { padding: 3px 0; }
+        .demo-info ul li::before { content: "✓ "; color: #22c55e; font-weight: bold; }
+        
+        /* Dashboard Styles */
+        .dashboard { display: none; min-height: 100vh; background: #f7fafc; }
+        .dashboard.active { display: block; }
+        .navbar { background: white; padding: 15px 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .navbar h2 { color: #667eea; }
+        .navbar .user-info { display: flex; align-items: center; gap: 15px; }
+        .navbar .user-name { color: #333; font-weight: 500; }
+        .btn-logout { padding: 8px 20px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; }
+        .content { display: flex; }
+        .sidebar { width: 250px; background: white; min-height: calc(100vh - 70px); padding: 20px; box-shadow: 2px 0 10px rgba(0,0,0,0.05); }
+        .menu-item { padding: 12px 15px; margin-bottom: 5px; border-radius: 8px; cursor: pointer; transition: all 0.3s; color: #333; }
+        .menu-item:hover, .menu-item.active { background: #667eea; color: white; }
+        .main-content { flex: 1; padding: 30px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .stat-card h3 { color: #666; font-size: 14px; margin-bottom: 10px; }
+        .stat-card .value { font-size: 32px; font-weight: bold; color: #667eea; }
+        .section-title { font-size: 24px; color: #333; margin-bottom: 20px; }
+        .data-table { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow: hidden; }
+        .data-table table { width: 100%; border-collapse: collapse; }
+        .data-table th { background: #667eea; color: white; padding: 15px; text-align: left; font-weight: 600; }
+        .data-table td { padding: 15px; border-bottom: 1px solid #e2e8f0; }
+        .data-table tr:hover { background: #f7fafc; }
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .badge-success { background: #d1fae5; color: #065f46; }
+        .badge-warning { background: #fef3c7; color: #92400e; }
+        .badge-info { background: #dbeafe; color: #1e40af; }
+        .module-section { display: none; }
+        .module-section.active { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-box">
+            <div class="logo">
+                <h1>🏥 Medical Management</h1>
+                <p>Hospital & Clinic Management System</p>
+                <span class="demo-badge">DEMO MODE</span>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username" placeholder="Enter any username" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="Enter any password" required>
+                </div>
+                <button type="submit" class="btn-login">Login to Dashboard</button>
+            </form>
+            <div class="demo-info">
+                <h3>🎯 Demo Mode Features:</h3>
+                <ul>
+                    <li>No backend or database needed</li>
+                    <li>Login with any credentials</li>
+                    <li>Explore all 6 modules with sample data</li>
+                    <li>3 patients, 3 appointments, 2 bills</li>
+                    <li>4 medicines, 4 lab tests</li>
+                    <li>Indian currency formatting (₹)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+        <div class="navbar">
+            <h2>🏥 Medical Management System</h2>
+            <div class="user-info">
+                <span class="user-name">👤 <span id="displayName">Admin User</span></span>
+                <button class="btn-logout" onclick="logout()">Logout</button>
+            </div>
+        </div>
+        <div class="content">
+            <div class="sidebar">
+                <div class="menu-item active" onclick="showModule('dashboard')">📊 Dashboard</div>
+                <div class="menu-item" onclick="showModule('patients')">👥 Patients</div>
+                <div class="menu-item" onclick="showModule('appointments')">📅 Appointments</div>
+                <div class="menu-item" onclick="showModule('billing')">💰 Billing</div>
+                <div class="menu-item" onclick="showModule('pharmacy')">💊 Pharmacy</div>
+                <div class="menu-item" onclick="showModule('laboratory')">🔬 Laboratory</div>
+            </div>
+            <div class="main-content">
+                <!-- Dashboard Module -->
+                <div id="module-dashboard" class="module-section active">
+                    <h2 class="section-title">Dashboard Overview</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Today's Appointments</h3>
+                            <div class="value">12</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Total Patients</h3>
+                            <div class="value">8</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Pending Bills</h3>
+                            <div class="value">3</div>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Today's Revenue</h3>
+                            <div class="value">₹45,600</div>
+                        </div>
+                    </div>
+                    <h3 style="margin-top: 30px; margin-bottom: 15px; color: #333;">Recent Appointments</h3>
+                    <div class="data-table">
+                        <table>
+                            <thead>
+                                <tr><th>ID</th><th>Patient</th><th>Doctor</th><th>Time</th><th>Status</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>APT000001</td><td>Rajesh Kumar</td><td>Dr. Anjali Mehta</td><td>Tomorrow 10:00 AM</td><td><span class="badge badge-info">Scheduled</span></td></tr>
+                                <tr><td>APT000002</td><td>Priya Sharma</td><td>Dr. Suresh Patel</td><td>Today 02:00 PM</td><td><span class="badge badge-success">Completed</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Patients Module -->
+                <div id="module-patients" class="module-section">
+                    <h2 class="section-title">Patient Records</h2>
+                    <div class="data-table">
+                        <table>
+                            <thead>
+                                <tr><th>Patient ID</th><th>Name</th><th>Age</th><th>Gender</th><th>Phone</th><th>Blood Group</th><th>Conditions</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>PAT000001</td><td>Rajesh Kumar</td><td>39</td><td>Male</td><td>+91 98765 43210</td><td>B+</td><td>Hypertension</td></tr>
+                                <tr><td>PAT000002</td><td>Priya Sharma</td><td>34</td><td>Female</td><td>+91 98765 43220</td><td>O+</td><td>Diabetes Type 2</td></tr>
+                                <tr><td>PAT000003</td><td>Mohammad Ali</td><td>46</td><td>Male</td><td>+91 98765 43230</td><td>A+</td><td>None</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Appointments Module -->
+                <div id="module-appointments" class="module-section">
+                    <h2 class="section-title">Appointments</h2>
+                    <div class="data-table">
+                        <table>
+                            <thead>
+                                <tr><th>Appointment ID</th><th>Patient</th><th>Doctor</th><th>Date & Time</th><th>Type</th><th>Status</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>APT000001</td><td>Rajesh Kumar</td><td>Dr. Anjali Mehta (General Physician)</td><td>Tomorrow 10:00 AM</td><td>Consultation</td><td><span class="badge badge-info">Scheduled</span></td></tr>
+                                <tr><td>APT000002</td><td>Priya Sharma</td><td>Dr. Suresh Patel (Diabetologist)</td><td>Today 02:00 PM</td><td>Follow-up</td><td><span class="badge badge-success">Completed</span></td></tr>
+                                <tr><td>APT000003</td><td>Mohammad Ali</td><td>Dr. Kavita Singh (Cardiologist)</td><td>Day After 11:30 AM</td><td>Consultation</td><td><span class="badge badge-info">Scheduled</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Billing Module -->
+                <div id="module-billing" class="module-section">
+                    <h2 class="section-title">Billing & Payments</h2>
+                    <div class="data-table">
+                        <table>
+                            <thead>
+                                <tr><th>Bill Number</th><th>Patient</th><th>Services</th><th>Amount</th><th>Payment Method</th><th>Status</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>BILL000001</td><td>Priya Sharma</td><td>Consultation + HbA1c + Blood Sugar</td><td>₹1,400</td><td>UPI</td><td><span class="badge badge-success">Paid</span></td></tr>
+                                <tr><td>BILL000002</td><td>Rajesh Kumar</td><td>Consultation + ECG</td><td>₹800</td><td>Cash</td><td><span class="badge badge-success">Paid</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pharmacy Module -->
+                <div id="module-pharmacy" class="module-section">
+                    <h2 class="section-title">Pharmacy Inventory</h2>
+                    <div class="data-table">
+                        <table>
+                            <thead>
+                                <tr><th>Medicine ID</th><th>Name</th><th>Generic Name</th><th>Manufacturer</th><th>Stock</th><th>Unit Price</th><th>Category</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>MED000001</td><td>Paracetamol 500mg</td><td>Acetaminophen</td><td>Cipla Ltd</td><td>500</td><td>₹2.50</td><td>Analgesic</td></tr>
+                                <tr><td>MED000002</td><td>Amoxicillin 250mg</td><td>Amoxicillin</td><td>Sun Pharma</td><td>300</td><td>₹8.00</td><td>Antibiotic</td></tr>
+                                <tr><td>MED000003</td><td>Metformin 500mg</td><td>Metformin HCl</td><td>Dr. Reddy's</td><td>450</td><td>₹3.50</td><td>Antidiabetic</td></tr>
+                                <tr><td>MED000004</td><td>Atorvastatin 10mg</td><td>Atorvastatin</td><td>Ranbaxy</td><td>200</td><td>₹12.00</td><td>Cholesterol</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Laboratory Module -->
+                <div id="module-laboratory" class="module-section">
+                    <h2 class="section-title">Laboratory Tests</h2>
+                    <div class="data-table">
+                        <table>
+                            <thead>
+                                <tr><th>Test ID</th><th>Test Name</th><th>Category</th><th>Cost</th><th>Normal Range</th><th>Turnaround Time</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>LAB000001</td><td>Complete Blood Count (CBC)</td><td>Hematology</td><td>₹400</td><td>WBC: 4000-11000</td><td>4 hours</td></tr>
+                                <tr><td>LAB000002</td><td>HbA1c (Glycated Hemoglobin)</td><td>Biochemistry</td><td>₹800</td><td>4.0-5.6%</td><td>24 hours</td></tr>
+                                <tr><td>LAB000003</td><td>Lipid Profile</td><td>Biochemistry</td><td>₹600</td><td>Total Cholesterol <200 mg/dL</td><td>6 hours</td></tr>
+                                <tr><td>LAB000004</td><td>Liver Function Test (LFT)</td><td>Biochemistry</td><td>₹500</td><td>ALT: 7-56 U/L</td><td>6 hours</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Login handling
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            document.getElementById('displayName').textContent = username || 'Admin User';
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('dashboard').classList.add('active');
+        });
+
+        // Module switching
+        function showModule(moduleName) {
+            // Hide all modules
+            document.querySelectorAll('.module-section').forEach(m => m.classList.remove('active'));
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            
+            // Show selected module
+            document.getElementById('module-' + moduleName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Logout
+        function logout() {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('dashboard').classList.remove('active');
+            document.getElementById('loginForm').reset();
+        }
+    </script>
+</body>
+</html>
