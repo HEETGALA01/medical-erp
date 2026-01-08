@@ -84,17 +84,21 @@ const BillingForm = () => {
     const total = calculateTotal();
 
     const newBill = {
-      id: `BILL${Date.now()}`,
+      _id: `B${Date.now()}`,
+      billNumber: `BILL${Date.now()}`,
       patientId: formData.patientId,
       patientName: formData.patientName,
-      items: formData.items,
+      items: formData.items.map(item => ({
+        ...item,
+        amount: item.quantity * item.rate
+      })),
       subtotal,
       discount: formData.discount,
+      tax: 0,
       total,
       paymentMethod: formData.paymentMethod,
-      paymentStatus: formData.paymentStatus,
+      status: formData.paymentStatus,
       notes: formData.notes,
-      date: new Date().toISOString(),
       createdAt: new Date().toISOString()
     };
 

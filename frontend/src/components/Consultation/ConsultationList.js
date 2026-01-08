@@ -6,7 +6,6 @@ function ConsultationList() {
   const [consultations, setConsultations] = useState([]);
   const [filteredConsultations, setFilteredConsultations] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('All');
 
   useEffect(() => {
     loadConsultations();
@@ -14,7 +13,7 @@ function ConsultationList() {
 
   useEffect(() => {
     filterConsultations();
-  }, [consultations, searchTerm, filterStatus]);
+  }, [consultations, searchTerm]);
 
   const loadConsultations = () => {
     const stored = JSON.parse(localStorage.getItem('consultations') || '[]');
@@ -30,10 +29,6 @@ function ConsultationList() {
         c.diagnosis.toLowerCase().includes(searchTerm.toLowerCase()) ||
         c.doctorName.toLowerCase().includes(searchTerm.toLowerCase())
       );
-    }
-
-    if (filterStatus !== 'All') {
-      filtered = filtered.filter(c => c.billStatus === filterStatus);
     }
 
     setFilteredConsultations(filtered);
@@ -92,22 +87,6 @@ function ConsultationList() {
             fontSize: '1rem'
           }}
         />
-        
-        <select
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-          style={{
-            padding: '0.75rem 1rem',
-            borderRadius: '0.5rem',
-            border: '2px solid #e2e8f0',
-            fontSize: '1rem',
-            cursor: 'pointer'
-          }}
-        >
-          <option value="All">All Status</option>
-          <option value="Pending">Pending Bills</option>
-          <option value="Paid">Paid Bills</option>
-        </select>
 
         <Link
           to="/consultations/new"
@@ -139,19 +118,19 @@ function ConsultationList() {
           </div>
           <div style={{ fontSize: '1rem', opacity: 0.9 }}>Total Records</div>
         </div>
-        <div style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)', padding: '1.5rem', borderRadius: '1rem', color: 'white', boxShadow: '0 10px 20px rgba(245, 158, 11, 0.3)' }}>
+        <div style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)', padding: '1.5rem', borderRadius: '1rem', color: 'white', boxShadow: '0 10px 20px rgba(139, 92, 246, 0.3)' }}>
           <div style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '0.25rem' }}>
-            {consultations.filter(c => c.billStatus === 'Pending').length}
+            {consultations.filter(c => c.labTestsRequired).length}
           </div>
-          <div style={{ fontSize: '1rem', opacity: 0.9 }}>Pending Bills</div>
+          <div style={{ fontSize: '1rem', opacity: 0.9 }}>With Lab Tests</div>
         </div>
         <div style={{ background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)', padding: '1.5rem', borderRadius: '1rem', color: 'white', boxShadow: '0 10px 20px rgba(16, 185, 129, 0.3)' }}>
           <div style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '0.25rem' }}>
-            {consultations.filter(c => c.billStatus === 'Paid').length}
+            {consultations.filter(c => c.followUpDate).length}
           </div>
-          <div style={{ fontSize: '1rem', opacity: 0.9 }}>Paid Bills</div>
+          <div style={{ fontSize: '1rem', opacity: 0.9 }}>Follow-ups Scheduled</div>
         </div>
-        <div style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)', padding: '1.5rem', borderRadius: '1rem', color: 'white', boxShadow: '0 10px 20px rgba(139, 92, 246, 0.3)' }}>
+        <div style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)', padding: '1.5rem', borderRadius: '1rem', color: 'white', boxShadow: '0 10px 20px rgba(245, 158, 11, 0.3)' }}>
           <div style={{ fontSize: '2.5rem', fontWeight: '800', marginBottom: '0.25rem' }}>
             {consultations.filter(c => c.labTestsRequired).length}
           </div>
@@ -179,8 +158,7 @@ function ConsultationList() {
                   <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Doctor</th>
                   <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Diagnosis</th>
                   <th style={{ padding: '1rem', textAlign: 'center', fontWeight: '600' }}>Lab Tests</th>
-                  <th style={{ padding: '1rem', textAlign: 'center', fontWeight: '600' }}>Bill Status</th>
-                  <th style={{ padding: '1rem', textAlign: 'center', fontWeight: '600' }}>Amount</th>
+                  <th style={{ padding: '1rem', textAlign: 'center', fontWeight: '600' }}>Follow-up</th>
                   <th style={{ padding: '1rem', textAlign: 'center', fontWeight: '600' }}>Actions</th>
                 </tr>
               </thead>
@@ -238,19 +216,20 @@ function ConsultationList() {
                       )}
                     </td>
                     <td style={{ padding: '1rem', textAlign: 'center' }}>
-                      <span style={{
-                        padding: '0.25rem 0.75rem',
-                        borderRadius: '0.5rem',
-                        background: consultation.billStatus === 'Paid' ? '#d1fae5' : '#fef3c7',
-                        color: consultation.billStatus === 'Paid' ? '#065f46' : '#92400e',
-                        fontSize: '0.85rem',
-                        fontWeight: '600'
-                      }}>
-                        {consultation.billStatus}
-                      </span>
-                    </td>
-                    <td style={{ padding: '1rem', textAlign: 'center', fontWeight: '700', color: '#0891b2' }}>
-                      ₹{consultation.billAmount || 0}
+                      {consultation.followUpDate ? (
+                        <span style={{
+                          padding: '0.25rem 0.75rem',
+                          borderRadius: '0.5rem',
+                          background: '#dbeafe',
+                          color: '#1e40af',
+                          fontSize: '0.85rem',
+                          fontWeight: '600'
+                        }}>
+                          {formatDate(consultation.followUpDate)}
+                        </span>
+                      ) : (
+                        <span style={{ color: '#94a3b8', fontSize: '0.9rem' }}>-</span>
+                      )}
                     </td>
                     <td style={{ padding: '1rem', textAlign: 'center' }}>
                       <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>

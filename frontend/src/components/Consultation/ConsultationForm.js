@@ -16,7 +16,7 @@ function ConsultationForm() {
     chiefComplaint: '',
     symptoms: '',
     diagnosis: '',
-    prescribedMedicines: [],
+    prescribedMedicines: '',
     dispensedMedicines: [],
     vitals: {
       bloodPressure: '',
@@ -28,11 +28,11 @@ function ConsultationForm() {
     labTestsRequired: false,
     labTests: [],
     notes: '',
-    billAmount: 0,
-    billStatus: 'Pending',
     followUpDate: '',
     status: 'Active'
   });
+
+  const [availableInventory, setAvailableInventory] = useState([]);
 
   const availableMedicines = [
     'Paracetamol 500mg', 'Ibuprofen 400mg', 'Amoxicillin 500mg',
@@ -59,6 +59,11 @@ function ConsultationForm() {
   useEffect(() => {
     const allPatients = getAllPatients();
     setPatients(allPatients);
+
+    // Load available inventory from pharmacy
+    const medicines = JSON.parse(localStorage.getItem('mockMedicines') || '[]');
+    const inStockMedicines = medicines.filter(med => med.stockQuantity > 0);
+    setAvailableInventory(inStockMedicines);
 
     if (isEdit) {
       const consultations = JSON.parse(localStorage.getItem('consultations') || '[]');
@@ -94,24 +99,6 @@ function ConsultationForm() {
     }
   };
 
-  const addPrescribedMedicine = () => {
-    setFormData({
-      ...formData,
-      prescribedMedicines: [...formData.prescribedMedicines, { name: '', dosage: '', duration: '', instructions: '', dispensed: false }]
-    });
-  };
-
-  const removePrescribedMedicine = (index) => {
-    const updated = formData.prescribedMedicines.filter((_, i) => i !== index);
-    setFormData({ ...formData, prescribedMedicines: updated });
-  };
-
-  const updatePrescribedMedicine = (index, field, value) => {
-    const updated = [...formData.prescribedMedicines];
-    updated[index][field] = value;
-    setFormData({ ...formData, prescribedMedicines: updated });
-  };
-
   const addDispensedMedicine = () => {
     setFormData({
       ...formData,
@@ -133,7 +120,13 @@ function ConsultationForm() {
   const addLabTest = () => {
     setFormData({
       ...formData,
-      labTests: [...formData.labTests, { testName: '', status: 'Pending', orderedDate: new Date().toISOString() }]
+      labTests: [...formData.labTests, { 
+        testName: '', 
+        status: 'Pending', 
+        orderedDate: new Date().toISOString(),
+        scheduledDate: '',
+        scheduledTime: ''
+      }]
     });
   };
 
@@ -178,34 +171,6 @@ function ConsultationForm() {
 
     localStorage.setItem('consultations', JSON.stringify(consultations));
 
-    // Save billing record
-    if (formData.billAmount > 0) {
-      const billings = JSON.parse(localStorage.getItem('mockBillings') || '[]');
-      const billExists = billings.find(b => b.consultationId === (isEdit ? id : Date.now().toString()));
-      
-      if (!billExists) {
-        const newBill = {
-          _id: `B${Date.now()}`,
-          billNumber: `BILL${Date.now()}`,
-          patientId: formData.patientId,
-          patientName: formData.patientName,
-          consultationId: isEdit ? id : Date.now().toString(),
-          items: [
-            { description: 'Consultation Fee', quantity: 1, rate: formData.billAmount, amount: formData.billAmount }
-          ],
-          subtotal: formData.billAmount,
-          discount: 0,
-          tax: 0,
-          total: formData.billAmount,
-          status: formData.billStatus,
-          paymentMethod: formData.billStatus === 'Paid' ? 'Cash' : '',
-          createdAt: new Date().toISOString()
-        };
-        billings.push(newBill);
-        localStorage.setItem('mockBillings', JSON.stringify(billings));
-      }
-    }
-
     // Save lab test records
     if (formData.labTestsRequired && formData.labTests.length > 0) {
       const labTests = JSON.parse(localStorage.getItem('labTests') || '[]');
@@ -227,6 +192,8 @@ function ConsultationForm() {
             status: test.status || 'Pending',
             orderedBy: formData.doctorName,
             orderedDate: test.orderedDate || new Date().toISOString(),
+            scheduledDate: test.scheduledDate || '',
+            scheduledTime: test.scheduledTime || '',
             result: '',
             remarks: ''
           });
@@ -401,72 +368,35 @@ function ConsultationForm() {
 
         {/* Prescribed Medicines (To Buy from Outside) */}
         <div style={{ marginBottom: '2.5rem', paddingBottom: '2rem', borderBottom: '2px solid #e2e8f0' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1e293b' }}>
-              💊 Prescribed Medicines (Patient to Buy)
-            </h2>
-            <button
-              type="button"
-              onClick={addPrescribedMedicine}
-              style={{ padding: '0.5rem 1rem', background: '#0891b2', color: 'white', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', fontWeight: '600' }}
-            >
-              + Add Medicine
-            </button>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '1.5rem', color: '#1e293b' }}>
+            💊 Prescribed Medicines (Patient to Buy)
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <label style={{ fontWeight: '600', fontSize: '0.95rem' }}>
+              Write all medicines here (one per line or separated by commas)
+            </label>
+            <textarea
+              name="prescribedMedicines"
+              value={formData.prescribedMedicines}
+              onChange={handleChange}
+              rows="6"
+              style={{ 
+                padding: '0.875rem', 
+                borderRadius: '0.75rem', 
+                border: '2px solid #e2e8f0', 
+                background: '#f8fafc', 
+                fontFamily: 'inherit',
+                fontSize: '0.95rem'
+              }}
+              placeholder="Example:
+Paracetamol 500mg - 1-0-1 after meals for 5 days
+Amoxicillin 500mg - 1-1-1 before meals for 7 days
+Cetirizine 10mg - 0-0-1 at bedtime for 3 days"
+            />
+            <p style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '0.25rem' }}>
+              💡 Tip: Include medicine name, dosage, frequency, and duration
+            </p>
           </div>
-          {formData.prescribedMedicines.map((med, index) => (
-            <div key={index} style={{ background: '#f8fafc', padding: '1rem', borderRadius: '0.75rem', marginBottom: '1rem', border: '1px solid #e2e8f0' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '0.5rem' }}>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <label style={{ fontWeight: '600', fontSize: '0.85rem' }}>Medicine Name</label>
-                  <select
-                    value={med.name}
-                    onChange={(e) => updatePrescribedMedicine(index, 'name', e.target.value)}
-                    style={{ padding: '0.75rem', borderRadius: '0.5rem', border: '2px solid #e2e8f0', background: 'white' }}
-                  >
-                    <option value="">Select...</option>
-                    {availableMedicines.map(m => <option key={m} value={m}>{m}</option>)}
-                  </select>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <label style={{ fontWeight: '600', fontSize: '0.85rem' }}>Dosage</label>
-                  <input
-                    type="text"
-                    value={med.dosage}
-                    onChange={(e) => updatePrescribedMedicine(index, 'dosage', e.target.value)}
-                    placeholder="1-0-1"
-                    style={{ padding: '0.75rem', borderRadius: '0.5rem', border: '2px solid #e2e8f0', background: 'white' }}
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <label style={{ fontWeight: '600', fontSize: '0.85rem' }}>Duration</label>
-                  <input
-                    type="text"
-                    value={med.duration}
-                    onChange={(e) => updatePrescribedMedicine(index, 'duration', e.target.value)}
-                    placeholder="5 days"
-                    style={{ padding: '0.75rem', borderRadius: '0.5rem', border: '2px solid #e2e8f0', background: 'white' }}
-                  />
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <label style={{ fontWeight: '600', fontSize: '0.85rem' }}>Instructions</label>
-                  <input
-                    type="text"
-                    value={med.instructions}
-                    onChange={(e) => updatePrescribedMedicine(index, 'instructions', e.target.value)}
-                    placeholder="After meals"
-                    style={{ padding: '0.75rem', borderRadius: '0.5rem', border: '2px solid #e2e8f0', background: 'white' }}
-                  />
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => removePrescribedMedicine(index)}
-                style={{ padding: '0.5rem 1rem', background: '#ef4444', color: 'white', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', fontSize: '0.85rem' }}
-              >
-                Remove
-              </button>
-            </div>
-          ))}
         </div>
 
         {/* Dispensed Medicines (Given at Clinic) */}
@@ -483,18 +413,34 @@ function ConsultationForm() {
               + Add Medicine
             </button>
           </div>
+          {availableInventory.length === 0 && (
+            <div style={{ 
+              background: '#fef3c7', 
+              padding: '1rem', 
+              borderRadius: '0.75rem', 
+              marginBottom: '1rem',
+              border: '1px solid #fbbf24',
+              color: '#92400e'
+            }}>
+              ⚠️ No medicines available in inventory. Please add medicines to the pharmacy first.
+            </div>
+          )}
           {formData.dispensedMedicines.map((med, index) => (
             <div key={index} style={{ background: '#f0fdf4', padding: '1rem', borderRadius: '0.75rem', marginBottom: '1rem', border: '1px solid #bbf7d0' }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '0.5rem' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                  <label style={{ fontWeight: '600', fontSize: '0.85rem' }}>Medicine Name</label>
+                  <label style={{ fontWeight: '600', fontSize: '0.85rem' }}>Medicine Name (Available in Stock)</label>
                   <select
                     value={med.name}
                     onChange={(e) => updateDispensedMedicine(index, 'name', e.target.value)}
                     style={{ padding: '0.75rem', borderRadius: '0.5rem', border: '2px solid #bbf7d0', background: 'white' }}
                   >
-                    <option value="">Select...</option>
-                    {availableMedicines.map(m => <option key={m} value={m}>{m}</option>)}
+                    <option value="">Select from inventory...</option>
+                    {availableInventory.map(m => (
+                      <option key={m._id} value={m.name}>
+                        {m.name} - {m.stockQuantity} units available
+                      </option>
+                    ))}
                   </select>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -556,7 +502,7 @@ function ConsultationForm() {
           </div>
           {formData.labTestsRequired && formData.labTests.map((test, index) => (
             <div key={index} style={{ background: '#faf5ff', padding: '1rem', borderRadius: '0.75rem', marginBottom: '1rem', border: '1px solid #e9d5ff' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1rem', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '0.5rem' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   <label style={{ fontWeight: '600', fontSize: '0.85rem' }}>Test Name</label>
                   <select
@@ -567,6 +513,24 @@ function ConsultationForm() {
                     <option value="">Select Test...</option>
                     {availableLabTests.map(t => <option key={t} value={t}>{t}</option>)}
                   </select>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <label style={{ fontWeight: '600', fontSize: '0.85rem' }}>Scheduled Date</label>
+                  <input
+                    type="date"
+                    value={test.scheduledDate || ''}
+                    onChange={(e) => updateLabTest(index, 'scheduledDate', e.target.value)}
+                    style={{ padding: '0.75rem', borderRadius: '0.5rem', border: '2px solid #e9d5ff', background: 'white' }}
+                  />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <label style={{ fontWeight: '600', fontSize: '0.85rem' }}>Scheduled Time</label>
+                  <input
+                    type="time"
+                    value={test.scheduledTime || ''}
+                    onChange={(e) => updateLabTest(index, 'scheduledTime', e.target.value)}
+                    style={{ padding: '0.75rem', borderRadius: '0.5rem', border: '2px solid #e9d5ff', background: 'white' }}
+                  />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                   <label style={{ fontWeight: '600', fontSize: '0.85rem' }}>Status</label>
@@ -592,35 +556,12 @@ function ConsultationForm() {
           ))}
         </div>
 
-        {/* Billing & Follow-up */}
+        {/* Follow-up & Notes */}
         <div style={{ marginBottom: '2.5rem', paddingBottom: '2rem', borderBottom: '2px solid #e2e8f0' }}>
           <h2 style={{ fontSize: '1.5rem', fontWeight: '700', marginBottom: '1.5rem', color: '#1e293b' }}>
-            💰 Billing & Follow-up
+            � Follow-up & Notes
           </h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontWeight: '600', fontSize: '0.95rem' }}>Bill Amount (₹)</label>
-              <input
-                type="number"
-                name="billAmount"
-                value={formData.billAmount}
-                onChange={handleChange}
-                style={{ padding: '0.875rem', borderRadius: '0.75rem', border: '2px solid #e2e8f0', background: '#f8fafc' }}
-                placeholder="500"
-              />
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontWeight: '600', fontSize: '0.95rem' }}>Bill Status</label>
-              <select
-                name="billStatus"
-                value={formData.billStatus}
-                onChange={handleChange}
-                style={{ padding: '0.875rem', borderRadius: '0.75rem', border: '2px solid #e2e8f0', background: '#f8fafc' }}
-              >
-                <option value="Pending">Pending</option>
-                <option value="Paid">Paid</option>
-              </select>
-            </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <label style={{ fontWeight: '600', fontSize: '0.95rem' }}>Follow-up Date</label>
               <input
@@ -632,7 +573,7 @@ function ConsultationForm() {
               />
             </div>
           </div>
-          <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             <label style={{ fontWeight: '600', fontSize: '0.95rem' }}>Additional Notes</label>
             <textarea
               name="notes"

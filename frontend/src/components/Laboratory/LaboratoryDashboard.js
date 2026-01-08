@@ -51,6 +51,13 @@ const LaboratoryDashboard = () => {
     toast.success(`Test status updated to ${newStatus}`);
   };
 
+  const handleCheckComplete = (testId) => {
+    const test = labTests.find(t => t._id === testId);
+    if (test && test.status === 'Pending') {
+      handleStatusChange(testId, 'Completed');
+    }
+  };
+
   const handleResultChange = (testId, result) => {
     const updated = labTests.map(t => 
       t._id === testId ? { ...t, result } : t
@@ -72,6 +79,11 @@ const LaboratoryDashboard = () => {
     if (!dateString) return 'N/A';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-IN');
+  };
+
+  const formatTime = (timeString) => {
+    if (!timeString) return '';
+    return timeString;
   };
 
   const tabs = [
@@ -175,6 +187,7 @@ const LaboratoryDashboard = () => {
                   <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Patient</th>
                   <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Ordered By</th>
                   <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Ordered Date</th>
+                  <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Scheduled</th>
                   <th style={{ padding: '1rem', textAlign: 'center', fontWeight: '600' }}>Status</th>
                   <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Result</th>
                   <th style={{ padding: '1rem', textAlign: 'center', fontWeight: '600' }}>Actions</th>
@@ -216,29 +229,70 @@ const LaboratoryDashboard = () => {
                         </div>
                       )}
                     </td>
+                    <td style={{ padding: '1rem' }}>
+                      {test.scheduledDate ? (
+                        <div>
+                          <div style={{ fontWeight: '600', color: '#8b5cf6' }}>
+                            📅 {formatDate(test.scheduledDate)}
+                          </div>
+                          {test.scheduledTime && (
+                            <div style={{ fontSize: '0.85rem', color: '#64748b', marginTop: '0.25rem' }}>
+                              ⏰ {formatTime(test.scheduledTime)}
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <div style={{ color: '#94a3b8', fontSize: '0.85rem' }}>Not scheduled</div>
+                      )}
+                    </td>
                     <td style={{ padding: '1rem', textAlign: 'center' }}>
-                      <select
-                        value={test.status}
-                        onChange={(e) => handleStatusChange(test._id, e.target.value)}
-                        style={{
-                          padding: '0.5rem 0.75rem',
-                          borderRadius: '0.5rem',
-                          border: 'none',
-                          background: 
-                            test.status === 'Completed' ? '#d1fae5' :
-                            test.status === 'In Progress' ? '#ddd6fe' : '#fef3c7',
-                          color: 
-                            test.status === 'Completed' ? '#065f46' :
-                            test.status === 'In Progress' ? '#5b21b6' : '#92400e',
-                          fontWeight: '700',
-                          fontSize: '0.85rem',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        <option value="Pending">Pending</option>
-                        <option value="In Progress">In Progress</option>
-                        <option value="Completed">Completed</option>
-                      </select>
+                      {test.status === 'Pending' ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
+                          <label style={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            gap: '0.5rem',
+                            cursor: 'pointer',
+                            padding: '0.5rem 0.75rem',
+                            borderRadius: '0.5rem',
+                            background: '#fef3c7',
+                            border: '2px solid #fbbf24'
+                          }}>
+                            <input
+                              type="checkbox"
+                              checked={false}
+                              onChange={() => handleCheckComplete(test._id)}
+                              style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                            />
+                            <span style={{ fontWeight: '700', fontSize: '0.85rem', color: '#92400e' }}>
+                              Mark Complete
+                            </span>
+                          </label>
+                        </div>
+                      ) : (
+                        <select
+                          value={test.status}
+                          onChange={(e) => handleStatusChange(test._id, e.target.value)}
+                          style={{
+                            padding: '0.5rem 0.75rem',
+                            borderRadius: '0.5rem',
+                            border: 'none',
+                            background: 
+                              test.status === 'Completed' ? '#d1fae5' :
+                              test.status === 'In Progress' ? '#ddd6fe' : '#fef3c7',
+                            color: 
+                              test.status === 'Completed' ? '#065f46' :
+                              test.status === 'In Progress' ? '#5b21b6' : '#92400e',
+                            fontWeight: '700',
+                            fontSize: '0.85rem',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          <option value="Pending">Pending</option>
+                          <option value="In Progress">In Progress</option>
+                          <option value="Completed">Completed</option>
+                        </select>
+                      )}
                     </td>
                     <td style={{ padding: '1rem' }}>
                       <input
