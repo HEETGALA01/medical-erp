@@ -13,25 +13,34 @@ import PatientList from './components/Patients/PatientList';
 import PatientForm from './components/Patients/PatientForm';
 import BillingList from './components/Billing/BillingList';
 import BillingForm from './components/Billing/BillingForm';
-import ConsultationList from './components/Consultation/ConsultationList';
-import ConsultationForm from './components/Consultation/ConsultationForm';
+import ConsultationList from './components/Consultations/ConsultationList';
+import ConsultationForm from './components/Consultations/ConsultationForm';
+import ConsultationView from './components/Consultations/ConsultationView';
 import PharmacyDashboard from './components/Pharmacy/PharmacyDashboard';
 import LaboratoryDashboard from './components/Laboratory/LaboratoryDashboard';
 import Navbar from './components/Layout/Navbar';
+import Sidebar from './components/Layout/Sidebar';
 import PrivateRoute from './components/Auth/PrivateRoute';
 
-// Layout wrapper to conditionally show Navbar
+// Layout wrapper to conditionally show Navbar and Sidebar
 function AppLayout() {
   const location = useLocation();
   const { isAuthenticated } = useAuth();
   
-  // Don't show Navbar on login page
-  const showNavbar = isAuthenticated && location.pathname !== '/login';
+  // Don't show Navbar and Sidebar on login page
+  const showLayout = isAuthenticated && location.pathname !== '/login';
   
   return (
     <>
-      {showNavbar && <Navbar />}
-      <div className={showNavbar ? "main-content" : ""}>
+      {showLayout && <Navbar />}
+      {showLayout && <Sidebar />}
+      <div style={{
+        marginTop: showLayout ? '70px' : '0',
+        marginLeft: showLayout ? '260px' : '0',
+        minHeight: showLayout ? 'calc(100vh - 70px)' : '100vh',
+        background: '#f8fafc',
+        padding: showLayout ? '2rem' : '0'
+      }}>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
@@ -41,6 +50,7 @@ function AppLayout() {
           <Route path="/consultations" element={<PrivateRoute><ConsultationList /></PrivateRoute>} />
           <Route path="/consultations/new" element={<PrivateRoute><ConsultationForm /></PrivateRoute>} />
           <Route path="/consultations/edit/:id" element={<PrivateRoute><ConsultationForm /></PrivateRoute>} />
+          <Route path="/consultations/view/:id" element={<PrivateRoute><ConsultationView /></PrivateRoute>} />
           <Route path="/billing" element={<PrivateRoute><BillingList /></PrivateRoute>} />
           <Route path="/billing/new" element={<PrivateRoute><BillingForm /></PrivateRoute>} />
           <Route path="/pharmacy" element={<PrivateRoute><PharmacyDashboard /></PrivateRoute>} />

@@ -14,7 +14,8 @@ const BillingForm = () => {
     paymentMethod: 'Cash',
     paymentStatus: 'Pending',
     discount: 0,
-    notes: ''
+    notes: '',
+    amountPaid: 0
   });
 
   useEffect(() => {
@@ -82,6 +83,10 @@ const BillingForm = () => {
 
     const subtotal = calculateSubtotal();
     const total = calculateTotal();
+    
+    // Calculate balance for partial payment
+    const amountPaid = formData.paymentStatus === 'Partially Paid' ? parseFloat(formData.amountPaid) || 0 : (formData.paymentStatus === 'Paid' ? total : 0);
+    const balance = total - amountPaid;
 
     const newBill = {
       _id: `B${Date.now()}`,
@@ -96,6 +101,8 @@ const BillingForm = () => {
       discount: formData.discount,
       tax: 0,
       total,
+      amountPaid,
+      balance,
       paymentMethod: formData.paymentMethod,
       status: formData.paymentStatus,
       notes: formData.notes,
@@ -246,6 +253,39 @@ const BillingForm = () => {
               </div>
             </div>
 
+            {/* Show amount paid field when Partially Paid is selected */}
+            {formData.paymentStatus === 'Partially Paid' && (
+              <div className="form-row" style={{ 
+                background: '#fef3c7', 
+                padding: '1rem', 
+                borderRadius: '0.5rem', 
+                border: '2px solid #fbbf24',
+                marginTop: '1rem'
+              }}>
+                <div className="form-group">
+                  <label style={{ fontWeight: '700', color: '#92400e' }}>Amount Paid (₹) *</label>
+                  <input
+                    type="number"
+                    name="amountPaid"
+                    value={formData.amountPaid}
+                    onChange={handleChange}
+                    min="0"
+                    max={calculateTotal()}
+                    step="0.01"
+                    placeholder="Enter amount paid"
+                    required
+                    style={{
+                      border: '2px solid #fbbf24',
+                      background: '#ffffff'
+                    }}
+                  />
+                  <small style={{ color: '#92400e', fontSize: '0.75rem', marginTop: '0.25rem', display: 'block' }}>
+                    Total Bill: ₹{calculateTotal().toFixed(2)} | Balance Due: ₹{(calculateTotal() - (parseFloat(formData.amountPaid) || 0)).toFixed(2)}
+                  </small>
+                </div>
+              </div>
+            )}
+
             <div className="form-group">
               <label>Notes</label>
               <textarea
@@ -273,6 +313,20 @@ const BillingForm = () => {
               <span>Total Amount:</span>
               <span>₹{calculateTotal().toFixed(2)}</span>
             </div>
+            
+            {/* Show payment details for Partially Paid */}
+            {formData.paymentStatus === 'Partially Paid' && formData.amountPaid > 0 && (
+              <>
+                <div className="summary-row" style={{ color: '#10b981', fontWeight: '600' }}>
+                  <span>Amount Paid:</span>
+                  <span>₹{parseFloat(formData.amountPaid).toFixed(2)}</span>
+                </div>
+                <div className="summary-row" style={{ color: '#dc2626', fontWeight: '700', fontSize: '1.1rem' }}>
+                  <span>Balance Due:</span>
+                  <span>₹{(calculateTotal() - parseFloat(formData.amountPaid)).toFixed(2)}</span>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Form Actions */}

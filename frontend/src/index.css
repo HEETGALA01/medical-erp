@@ -300,23 +300,23 @@ tbody td {
   100% { transform: rotate(360deg); }
 }
 
-/* Scrollbar Styling */
+/* Scrollbar Styling - Monochrome */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-tertiary);
+  background: #f3f4f6;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary-color);
+  background: #9ca3af;
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-dark);
+  background: #6b7280;
 }
 
 .form-group label {

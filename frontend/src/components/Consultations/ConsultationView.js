@@ -35,21 +35,32 @@ function ConsultationView() {
   };
 
   const getStatusBadge = (status) => {
-    const colors = {
-      'Active': '#06b6d4',
-      'Completed': '#22c55e',
-      'Follow-up Required': '#f59e0b'
+    return { 
+      background: '#f9fafb', 
+      color: '#1f2937', 
+      padding: '0.375rem 0.75rem', 
+      borderRadius: '0.375rem', 
+      fontWeight: '600', 
+      fontSize: '0.75rem',
+      border: '1px solid #e5e7eb'
     };
-    return { background: colors[status] || '#6b7280', color: 'white', padding: '0.5rem 1rem', borderRadius: '0.5rem', fontWeight: '600', fontSize: '0.875rem' };
   };
 
   const getBillStatusBadge = (status) => {
     const colors = {
-      'Paid': '#22c55e',
-      'Pending': '#f59e0b',
-      'Unpaid': '#ef4444'
+      'Paid': { bg: '#f0fdf4', color: '#166534' },
+      'Pending': { bg: '#fef3c7', color: '#92400e' },
+      'Unpaid': { bg: '#fee2e2', color: '#991b1b' }
     };
-    return { background: colors[status] || '#6b7280', color: 'white', padding: '0.5rem 1rem', borderRadius: '0.5rem', fontWeight: '600', fontSize: '0.875rem' };
+    const style = colors[status] || { bg: '#f9fafb', color: '#1f2937' };
+    return { 
+      background: style.bg, 
+      color: style.color, 
+      padding: '0.375rem 0.75rem', 
+      borderRadius: '0.375rem', 
+      fontWeight: '600', 
+      fontSize: '0.75rem'
+    };
   };
 
   if (loading) {
@@ -63,30 +74,58 @@ function ConsultationView() {
   const styles = {
     container: { maxWidth: '1200px', margin: '0 auto', padding: '2rem' },
     header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' },
-    title: { fontSize: '2rem', fontWeight: '700', color: '#0891b2' },
+    title: { fontSize: '1.5rem', fontWeight: '700', color: '#1f2937' },
     actions: { display: 'flex', gap: '1rem' },
-    card: { background: 'white', borderRadius: '1rem', padding: '2rem', boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)', marginBottom: '2rem' },
-    section: { marginBottom: '2rem', paddingBottom: '1.5rem', borderBottom: '1px solid #e2e8f0' },
-    sectionTitle: { fontSize: '1.25rem', fontWeight: '600', marginBottom: '1rem', color: '#0891b2' },
+    card: { background: 'white', borderRadius: '0.75rem', padding: '2rem', boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)', marginBottom: '2rem', border: '1px solid #e5e7eb' },
+    section: { marginBottom: '2rem', paddingBottom: '1.5rem', borderBottom: '1px solid #e5e7eb' },
+    sectionTitle: { fontSize: '1.125rem', fontWeight: '700', marginBottom: '1rem', color: '#1f2937' },
     row: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '1rem' },
     field: { display: 'flex', flexDirection: 'column', gap: '0.25rem' },
-    label: { fontSize: '0.875rem', fontWeight: '600', color: '#64748b' },
-    value: { fontSize: '1rem', color: '#1e293b' },
-    medicineCard: { background: '#f0f9ff', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1rem', border: '1px solid #bae6fd' },
+    label: { fontSize: '0.75rem', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' },
+    value: { fontSize: '0.875rem', color: '#1f2937' },
+    medicineCard: { background: '#f9fafb', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1rem', border: '1px solid #e5e7eb' },
     table: { width: '100%', borderCollapse: 'collapse', marginTop: '1rem' },
-    th: { padding: '0.75rem', background: '#f1f5f9', textAlign: 'left', fontWeight: '600', color: '#475569', borderBottom: '2px solid #cbd5e1' },
-    td: { padding: '0.75rem', borderBottom: '1px solid #e2e8f0', color: '#1e293b' },
+    th: { padding: '0.75rem', background: '#f9fafb', textAlign: 'left', fontWeight: '600', color: '#6b7280', borderBottom: '1px solid #e5e7eb', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' },
+    td: { padding: '0.75rem', borderBottom: '1px solid #f3f4f6', color: '#1f2937', fontSize: '0.875rem' },
     noPrint: { display: 'flex', gap: '1rem', marginBottom: '2rem' }
   };
 
   return (
     <div style={styles.container}>
       <div style={styles.header} className="no-print">
-        <h1 style={styles.title}>📋 Patient Consultation Record</h1>
+        <h1 style={styles.title}>Patient Consultation Record</h1>
         <div style={styles.actions}>
-          <button onClick={handlePrint} className="btn btn-secondary">🖨️ Print</button>
-          <Link to={`/consultations/edit/${id}`} className="btn btn-primary">✏️ Edit</Link>
-          <button onClick={() => navigate('/consultations')} className="btn btn-secondary">⬅️ Back</button>
+          <button onClick={handlePrint} className="btn btn-secondary" style={{
+            padding: '0.625rem 1.25rem',
+            background: '#f9fafb',
+            color: '#1f2937',
+            border: '1px solid #e5e7eb',
+            borderRadius: '0.5rem',
+            fontSize: '0.875rem',
+            fontWeight: '600',
+            cursor: 'pointer'
+          }}>Print</button>
+          <Link to={`/consultations/edit/${id}`} className="btn btn-primary" style={{
+            padding: '0.625rem 1.25rem',
+            background: '#1f2937',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '0.5rem',
+            fontSize: '0.875rem',
+            fontWeight: '600',
+            textDecoration: 'none',
+            display: 'inline-block'
+          }}>Edit</Link>
+          <button onClick={() => navigate('/consultations')} className="btn btn-secondary" style={{
+            padding: '0.625rem 1.25rem',
+            background: '#f9fafb',
+            color: '#1f2937',
+            border: '1px solid #e5e7eb',
+            borderRadius: '0.5rem',
+            fontSize: '0.875rem',
+            fontWeight: '600',
+            cursor: 'pointer'
+          }}>Back</button>
         </div>
       </div>
 
@@ -115,7 +154,7 @@ function ConsultationView() {
 
         {/* Patient & Doctor Info */}
         <div style={styles.section}>
-          <h2 style={styles.sectionTitle}>👤 Patient & Doctor Information</h2>
+          <h2 style={styles.sectionTitle}>Patient & Doctor Information</h2>
           <div style={styles.row}>
             <div style={styles.field}>
               <span style={styles.label}>Patient Name</span>
@@ -130,7 +169,7 @@ function ConsultationView() {
 
         {/* Chief Complaint & Vitals */}
         <div style={styles.section}>
-          <h2 style={styles.sectionTitle}>🩺 Chief Complaint & Vitals</h2>
+          <h2 style={styles.sectionTitle}>Chief Complaint & Vitals</h2>
           <div style={styles.field}>
             <span style={styles.label}>Chief Complaint</span>
             <span style={styles.value}>{consultation.chiefComplaint}</span>
@@ -179,7 +218,7 @@ function ConsultationView() {
 
         {/* Diagnosis */}
         <div style={styles.section}>
-          <h2 style={styles.sectionTitle}>🔬 Diagnosis & Examination</h2>
+          <h2 style={styles.sectionTitle}>Diagnosis & Examination</h2>
           {consultation.symptoms && consultation.symptoms.length > 0 && (
             <div style={styles.field}>
               <span style={styles.label}>Symptoms</span>
@@ -201,7 +240,7 @@ function ConsultationView() {
         {/* Medicines Given from Clinic */}
         {consultation.medicinesGiven && consultation.medicinesGiven.length > 0 && (
           <div style={styles.section}>
-            <h2 style={styles.sectionTitle}>💊 Medicines Given from Clinic</h2>
+            <h2 style={styles.sectionTitle}>Medicines Given from Clinic</h2>
             <table style={styles.table}>
               <thead>
                 <tr>
@@ -232,7 +271,7 @@ function ConsultationView() {
         {/* Medicines Prescribed */}
         {consultation.medicinesPrescribed && consultation.medicinesPrescribed.length > 0 && (
           <div style={styles.section}>
-            <h2 style={styles.sectionTitle}>📝 Medicines Prescribed (To Buy from Outside)</h2>
+            <h2 style={styles.sectionTitle}>Medicines Prescribed (To Buy from Outside)</h2>
             <table style={styles.table}>
               <thead>
                 <tr>
@@ -261,7 +300,7 @@ function ConsultationView() {
         {/* Lab Tests */}
         {consultation.labTestsRecommended && consultation.labTestsRecommended.length > 0 && (
           <div style={styles.section}>
-            <h2 style={styles.sectionTitle}>🔬 Lab Tests Recommended</h2>
+            <h2 style={styles.sectionTitle}>Lab Tests Recommended</h2>
             <ul style={{ paddingLeft: '1.5rem' }}>
               {consultation.labTestsRecommended.map((test, index) => (
                 <li key={index} style={{ marginBottom: '0.5rem' }}>{test}</li>
@@ -273,7 +312,7 @@ function ConsultationView() {
         {/* Follow-up */}
         {(consultation.followUpDate || consultation.followUpNotes) && (
           <div style={styles.section}>
-            <h2 style={styles.sectionTitle}>📅 Follow-up</h2>
+            <h2 style={styles.sectionTitle}>Follow-up</h2>
             <div style={styles.row}>
               {consultation.followUpDate && (
                 <div style={styles.field}>
@@ -293,7 +332,7 @@ function ConsultationView() {
 
         {/* Billing */}
         <div style={styles.section}>
-          <h2 style={styles.sectionTitle}>💰 Billing Information</h2>
+          <h2 style={styles.sectionTitle}>Billing Information</h2>
           <div style={styles.row}>
             <div style={styles.field}>
               <span style={styles.label}>Consultation Fee</span>
@@ -315,7 +354,7 @@ function ConsultationView() {
         {/* Doctor's Notes */}
         {consultation.doctorNotes && (
           <div style={styles.section}>
-            <h2 style={styles.sectionTitle}>📝 Doctor's Notes</h2>
+            <h2 style={styles.sectionTitle}>Doctor's Notes</h2>
             <div style={styles.field}>
               <span style={styles.value}>{consultation.doctorNotes}</span>
             </div>
@@ -323,7 +362,7 @@ function ConsultationView() {
         )}
 
         {/* Footer */}
-        <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '2px solid #e2e8f0', fontSize: '0.875rem', color: '#64748b' }}>
+        <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid #e5e7eb', fontSize: '0.75rem', color: '#6b7280' }}>
           <p>Created: {new Date(consultation.createdAt).toLocaleString()}</p>
           {consultation.updatedAt && <p>Last Updated: {new Date(consultation.updatedAt).toLocaleString()}</p>}
         </div>

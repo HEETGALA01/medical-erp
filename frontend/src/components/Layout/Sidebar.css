@@ -1,0 +1,40 @@
+/* Sidebar Scrollbar Styling */
+aside::-webkit-scrollbar {
+  width: 6px;
+}
+
+aside::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+aside::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+aside::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Smooth transitions */
+aside {
+  transition: transform 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  aside {
+    width: 220px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  aside {
+    width: 70px !important;
+  }
+  
+  /* Hide text labels on mobile, show only icons */
+  aside a span:last-child {
+    display: none;
+  }
+}

@@ -103,77 +103,176 @@ const PharmacyDashboard = () => {
   }
 
   return (
-    <div className="container list-page-container">
-      <div className="page-header">
-        <div className="page-title">
-          <span className="title-icon">💊</span>
-          <h1>Pharmacy Inventory</h1>
+    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem' }}>
+      <div style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div>
+          <h1 style={{ fontSize: '1.875rem', fontWeight: '700', color: '#1f2937', marginBottom: '0.5rem', margin: 0 }}>
+            Pharmacy Inventory
+          </h1>
+          <p style={{ color: '#6b7280', fontSize: '0.9375rem', margin: 0 }}>
+            Manage medicines and track inventory
+          </p>
         </div>
-        <div className="page-actions">
-          <button className="btn btn-success" onClick={() => setShowModal(true)}>➕ Add Medicine</button>
-        </div>
+        <button 
+          style={{
+            padding: '0.75rem 1.5rem',
+            background: '#1f2937',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '0.5rem',
+            fontSize: '0.9375rem',
+            fontWeight: '600',
+            cursor: 'pointer',
+            transition: 'all 0.2s'
+          }}
+          onClick={() => setShowModal(true)}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = '#374151';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = '#1f2937';
+          }}
+        >
+          Add Medicine
+        </button>
       </div>
 
-      <div className="search-filter-bar">
-        <div className="search-group">
-          <div className="search-input">
-            <input
-              type="text"
-              placeholder="🔍 Search medicines by name, generic name, or ID..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-        </div>
+      <div style={{ 
+        background: 'white', 
+        padding: '1.5rem', 
+        borderRadius: '0.75rem', 
+        marginBottom: '2rem', 
+        border: '1px solid #e5e7eb',
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)'
+      }}>
+        <input
+          type="text"
+          placeholder="Search medicines by name, generic name, or ID..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{
+            width: '100%',
+            padding: '0.875rem 1.25rem',
+            border: '1px solid #e5e7eb',
+            borderRadius: '0.5rem',
+            fontSize: '0.9375rem'
+          }}
+        />
       </div>
 
-      <div className="data-table-container">
+      <div style={{ 
+        background: 'white', 
+        borderRadius: '0.75rem', 
+        border: '1px solid #e5e7eb',
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+        overflow: 'hidden'
+      }}>
         {medicines.length > 0 ? (
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Medicine ID</th>
-                <th>Medicine Name</th>
-                <th>Generic Name</th>
-                <th>Manufacturer</th>
-                <th>Category</th>
-                <th>Stock</th>
-                <th>Unit Price</th>
-                <th>Expiry Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {medicines.map((med) => (
-                <tr key={med._id}>
-                  <td><strong>{med.medicineId}</strong></td>
-                  <td>{med.name}</td>
-                  <td>{med.genericName}</td>
-                  <td>{med.manufacturer}</td>
-                  <td><span className="badge badge-info">{med.category}</span></td>
-                  <td>
-                    <span className={`badge badge-${med.stockQuantity < med.reorderLevel ? 'danger' : 'success'}`}>
-                      {med.stockQuantity} units
-                    </span>
-                  </td>
-                  <td><strong>{formatCurrency(med.unitPrice)}</strong></td>
-                  <td>{new Date(med.expiryDate).toLocaleDateString('en-IN')}</td>
-                  <td>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <button className="btn-icon btn-view" title="View">👁️</button>
-                      <button className="btn-icon btn-edit" title="Edit">✏️</button>
-                    </div>
-                  </td>
+          <div>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid #e5e7eb', background: '#f9fafb' }}>
+                  <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Medicine ID
+                  </th>
+                  <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Medicine Name
+                  </th>
+                  <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Generic Name
+                  </th>
+                  <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Manufacturer
+                  </th>
+                  <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Category
+                  </th>
+                  <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Stock
+                  </th>
+                  <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Unit Price
+                  </th>
+                  <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    Expiry Date
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {medicines.map((med, index) => (
+                  <tr key={med._id} style={{ borderBottom: index < medicines.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
+                    <td style={{ padding: '1rem 1.25rem', fontSize: '0.875rem', color: '#1f2937', fontWeight: '600' }}>
+                      {med.medicineId}
+                    </td>
+                    <td style={{ padding: '1rem 1.25rem', fontSize: '0.875rem', color: '#1f2937' }}>
+                      {med.name}
+                    </td>
+                    <td style={{ padding: '1rem 1.25rem', fontSize: '0.875rem', color: '#6b7280' }}>
+                      {med.genericName}
+                    </td>
+                    <td style={{ padding: '1rem 1.25rem', fontSize: '0.875rem', color: '#6b7280' }}>
+                      {med.manufacturer}
+                    </td>
+                    <td style={{ padding: '1rem 1.25rem', fontSize: '0.875rem' }}>
+                      <span style={{ 
+                        padding: '0.25rem 0.625rem', 
+                        background: '#f3f4f6', 
+                        color: '#1f2937', 
+                        borderRadius: '0.375rem', 
+                        fontSize: '0.8125rem',
+                        fontWeight: '600'
+                      }}>
+                        {med.category}
+                      </span>
+                    </td>
+                    <td style={{ padding: '1rem 1.25rem', fontSize: '0.875rem', whiteSpace: 'nowrap' }}>
+                      <span style={{ 
+                        padding: '0.25rem 0.625rem', 
+                        background: med.stockQuantity < med.reorderLevel ? '#fee2e2' : '#e5e7eb', 
+                        color: med.stockQuantity < med.reorderLevel ? '#dc2626' : '#1f2937', 
+                        borderRadius: '0.375rem', 
+                        fontSize: '0.8125rem',
+                        fontWeight: '600',
+                        whiteSpace: 'nowrap'
+                      }}>
+                        {med.stockQuantity} units
+                      </span>
+                    </td>
+                    <td style={{ padding: '1rem 1.25rem', fontSize: '0.875rem', color: '#1f2937', fontWeight: '600' }}>
+                      {formatCurrency(med.unitPrice)}
+                    </td>
+                    <td style={{ padding: '1rem 1.25rem', fontSize: '0.875rem', color: '#6b7280' }}>
+                      {new Date(med.expiryDate).toLocaleDateString('en-IN')}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         ) : (
-          <div className="no-results">
-            <div className="no-results-icon">💊</div>
-            <h3>No Medicines Found</h3>
-            <p>No medicines match your search criteria.</p>
-            <button className="btn btn-primary" onClick={() => setShowModal(true)}>➕ Add First Medicine</button>
+          <div style={{ padding: '3rem', textAlign: 'center' }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '1rem', opacity: '0.3' }}>💊</div>
+            <h3 style={{ fontSize: '1.125rem', fontWeight: '700', color: '#1f2937', marginBottom: '0.5rem' }}>
+              No Medicines Found
+            </h3>
+            <p style={{ color: '#6b7280', fontSize: '0.9375rem', marginBottom: '1.5rem' }}>
+              No medicines match your search criteria.
+            </p>
+            <button 
+              style={{
+                padding: '0.75rem 1.5rem',
+                background: '#1f2937',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '0.5rem',
+                fontSize: '0.9375rem',
+                fontWeight: '600',
+                cursor: 'pointer'
+              }}
+              onClick={() => setShowModal(true)}
+            >
+              Add First Medicine
+            </button>
           </div>
         )}
       </div>

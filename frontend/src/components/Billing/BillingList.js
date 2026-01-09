@@ -67,60 +67,76 @@ const BillingList = () => {
   };
 
   const tabs = [
-    { name: 'All', count: billings.length, color: '#0891b2' },
-    { name: 'Pending', count: billings.filter(b => b.status === 'Pending').length, color: '#f59e0b' },
-    { name: 'Paid', count: billings.filter(b => b.status === 'Paid').length, color: '#10b981' }
+    { name: 'All', count: billings.length },
+    { name: 'Pending', count: billings.filter(b => b.status === 'Pending').length },
+    { name: 'Partially Paid', count: billings.filter(b => b.status === 'Partially Paid').length },
+    { name: 'Paid', count: billings.filter(b => b.status === 'Paid').length }
   ];
 
   return (
     <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem' }}>
       {/* Header */}
-      <div style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '3rem', fontWeight: '800', color: '#0891b2', marginBottom: '0.5rem' }}>
-          💰 Billing & Payments
+      <div style={{ marginBottom: '2rem' }}>
+        <h1 style={{ fontSize: '1.875rem', fontWeight: '700', color: '#1f2937', marginBottom: '0.5rem' }}>
+          Billing & Payments
         </h1>
-        <p style={{ color: '#64748b', fontSize: '1.2rem' }}>
+        <p style={{ color: '#6b7280', fontSize: '0.9375rem' }}>
           Manage bills and track payment status
         </p>
       </div>
 
-      {/* Tabs */}
+      {/* Tabs - 4 in a row */}
       <div style={{ 
         background: 'white', 
-        padding: '1rem', 
-        borderRadius: '1rem', 
+        padding: '1.5rem', 
+        borderRadius: '0.75rem', 
         marginBottom: '2rem', 
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
-        display: 'flex',
-        gap: '1rem',
-        flexWrap: 'wrap'
+        border: '1px solid #e5e7eb',
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gap: '1rem'
       }}>
         {tabs.map(tab => (
           <button
             key={tab.name}
             onClick={() => setActiveTab(tab.name)}
             style={{
-              padding: '0.75rem 1.5rem',
-              border: activeTab === tab.name ? `3px solid ${tab.color}` : '2px solid #e2e8f0',
-              borderRadius: '0.75rem',
-              background: activeTab === tab.name ? `${tab.color}15` : 'white',
-              color: activeTab === tab.name ? tab.color : '#64748b',
-              fontWeight: '700',
-              fontSize: '1rem',
+              padding: '1rem 1.5rem',
+              border: activeTab === tab.name ? '2px solid #1f2937' : '1px solid #e5e7eb',
+              borderRadius: '0.5rem',
+              background: activeTab === tab.name ? '#1f2937' : 'white',
+              color: activeTab === tab.name ? '#ffffff' : '#4b5563',
+              fontWeight: activeTab === tab.name ? '700' : '600',
+              fontSize: '0.9375rem',
               cursor: 'pointer',
               transition: 'all 0.2s',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.5rem'
+              justifyContent: 'space-between',
+              textAlign: 'left'
+            }}
+            onMouseEnter={(e) => {
+              if (activeTab !== tab.name) {
+                e.currentTarget.style.borderColor = '#1f2937';
+                e.currentTarget.style.background = '#f9fafb';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (activeTab !== tab.name) {
+                e.currentTarget.style.borderColor = '#e5e7eb';
+                e.currentTarget.style.background = 'white';
+              }
             }}
           >
             <span>{tab.name}</span>
             <span style={{
-              background: tab.color,
-              color: 'white',
-              padding: '0.25rem 0.5rem',
-              borderRadius: '0.5rem',
-              fontSize: '0.85rem'
+              background: activeTab === tab.name ? '#ffffff' : '#1f2937',
+              color: activeTab === tab.name ? '#1f2937' : '#ffffff',
+              padding: '0.25rem 0.625rem',
+              borderRadius: '0.375rem',
+              fontSize: '0.8125rem',
+              fontWeight: '700'
             }}>
               {tab.count}
             </span>
@@ -132,9 +148,10 @@ const BillingList = () => {
       <div style={{ 
         background: 'white', 
         padding: '1.5rem', 
-        borderRadius: '1rem', 
+        borderRadius: '0.75rem', 
         marginBottom: '2rem', 
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+        border: '1px solid #e5e7eb',
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
         display: 'flex',
         gap: '1rem',
         alignItems: 'center',
@@ -159,19 +176,19 @@ const BillingList = () => {
           to="/billing/new"
           style={{
             padding: '0.75rem 1.5rem',
-            background: 'linear-gradient(135deg, #0891b2 0%, #06b6d4 100%)',
+            background: '#1f2937',
             color: 'white',
             textDecoration: 'none',
             borderRadius: '0.5rem',
             fontWeight: '600',
-            fontSize: '1rem',
+            fontSize: '0.9375rem',
             border: 'none',
             cursor: 'pointer',
-            transition: 'transform 0.2s',
+            transition: 'all 0.2s',
             display: 'inline-block'
           }}
-          onMouseEnter={(e) => e.target.style.transform = 'scale(1.05)'}
-          onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+          onMouseEnter={(e) => e.target.style.background = '#374151'}
+          onMouseLeave={(e) => e.target.style.background = '#1f2937'}
         >
           + New Bill
         </Link>
@@ -188,17 +205,17 @@ const BillingList = () => {
             <p>Start by creating a new bill</p>
           </div>
         ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead style={{ background: 'linear-gradient(135deg, #0891b2 0%, #06b6d4 100%)', color: 'white' }}>
+          <div style={{ overflowX: 'auto' }} className="custom-scrollbar billing-table-container">
+            <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '900px' }}>
+              <thead style={{ background: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
                 <tr>
-                  <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Bill Number</th>
-                  <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Patient</th>
-                  <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Items</th>
-                  <th style={{ padding: '1rem', textAlign: 'center', fontWeight: '600' }}>Total</th>
-                  <th style={{ padding: '1rem', textAlign: 'center', fontWeight: '600' }}>Status</th>
-                  <th style={{ padding: '1rem', textAlign: 'left', fontWeight: '600' }}>Date</th>
-                  <th style={{ padding: '1rem', textAlign: 'center', fontWeight: '600' }}>Actions</th>
+                  <th style={{ padding: '0.875rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Bill Number</th>
+                  <th style={{ padding: '0.875rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Patient</th>
+                  <th style={{ padding: '0.875rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Items</th>
+                  <th style={{ padding: '0.875rem 1.5rem', textAlign: 'center', fontSize: '0.75rem', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Total</th>
+                  <th style={{ padding: '0.875rem 1.5rem', textAlign: 'center', fontSize: '0.75rem', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Status</th>
+                  <th style={{ padding: '0.875rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Date</th>
+                  <th style={{ padding: '0.875rem 1.5rem', textAlign: 'center', fontSize: '0.75rem', fontWeight: '700', color: '#6b7280', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -206,80 +223,93 @@ const BillingList = () => {
                   <tr
                     key={bill._id}
                     style={{
-                      borderBottom: '1px solid #e2e8f0',
-                      background: index % 2 === 0 ? '#f8fafc' : 'white',
-                      transition: 'background 0.2s'
+                      borderBottom: index < filteredBillings.length - 1 ? '1px solid #f3f4f6' : 'none'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.background = '#f1f5f9'}
-                    onMouseLeave={(e) => e.currentTarget.style.background = index % 2 === 0 ? '#f8fafc' : 'white'}
                   >
-                    <td style={{ padding: '1rem' }}>
-                      <div style={{ fontWeight: '700', color: '#0891b2' }}>
+                    <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem' }}>
+                      <div style={{ fontWeight: '600', color: '#1f2937' }}>
                         {bill.billNumber}
                       </div>
                       {bill.consultationId && (
-                        <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
+                        <div style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.25rem' }}>
                           From Consultation
                         </div>
                       )}
                     </td>
-                    <td style={{ padding: '1rem' }}>
-                      <div style={{ fontWeight: '600' }}>{bill.patientName}</div>
+                    <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem' }}>
+                      <div style={{ fontWeight: '600', color: '#1f2937' }}>{bill.patientName}</div>
                     </td>
-                    <td style={{ padding: '1rem' }}>
-                      <div style={{ fontSize: '0.9rem', color: '#64748b' }}>
+                    <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem' }}>
+                      <div style={{ color: '#6b7280' }}>
                         {bill.items?.length || 0} items
                       </div>
                       {bill.items && bill.items.length > 0 && (
-                        <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.25rem' }}>
+                        <div style={{ fontSize: '0.75rem', color: '#9ca3af', marginTop: '0.25rem' }}>
                           {bill.items[0].description}
                           {bill.items.length > 1 && ` +${bill.items.length - 1} more`}
                         </div>
                       )}
                     </td>
-                    <td style={{ padding: '1rem', textAlign: 'center' }}>
-                      <div style={{ fontWeight: '800', fontSize: '1.1rem', color: '#0891b2' }}>
+                    <td style={{ padding: '1rem 1.5rem', textAlign: 'center', fontSize: '0.875rem' }}>
+                      <div style={{ fontWeight: '700', fontSize: '1rem', color: '#1f2937' }}>
                         {formatCurrency(bill.total)}
                       </div>
+                      {bill.status === 'Partially Paid' && bill.balance > 0 && (
+                        <div style={{ fontSize: '0.75rem', color: '#dc2626', marginTop: '0.25rem', fontWeight: '600' }}>
+                          Balance: {formatCurrency(bill.balance)}
+                        </div>
+                      )}
+                      {bill.status === 'Partially Paid' && bill.amountPaid > 0 && (
+                        <div style={{ fontSize: '0.75rem', color: '#10b981', marginTop: '0.25rem' }}>
+                          Paid: {formatCurrency(bill.amountPaid)}
+                        </div>
+                      )}
                     </td>
-                    <td style={{ padding: '1rem', textAlign: 'center' }}>
+                    <td style={{ padding: '1rem 1.5rem', textAlign: 'center' }}>
                       <select
                         value={bill.status}
                         onChange={(e) => handleStatusChange(bill._id, e.target.value)}
                         style={{
-                          padding: '0.5rem 0.75rem',
-                          borderRadius: '0.5rem',
-                          border: 'none',
-                          background: bill.status === 'Paid' ? '#d1fae5' : '#fef3c7',
-                          color: bill.status === 'Paid' ? '#065f46' : '#92400e',
-                          fontWeight: '700',
-                          fontSize: '0.85rem',
+                          padding: '0.375rem 0.75rem',
+                          borderRadius: '0.375rem',
+                          border: '1px solid #e5e7eb',
+                          background: bill.status === 'Paid' ? '#f0fdf4' : bill.status === 'Partially Paid' ? '#fef3c7' : '#fef3c7',
+                          color: bill.status === 'Paid' ? '#166534' : bill.status === 'Partially Paid' ? '#c2410c' : '#92400e',
+                          fontWeight: '600',
+                          fontSize: '0.75rem',
                           cursor: 'pointer'
                         }}
                       >
                         <option value="Pending">Pending</option>
+                        <option value="Partially Paid">Partially Paid</option>
                         <option value="Paid">Paid</option>
                       </select>
                     </td>
-                    <td style={{ padding: '1rem' }}>
-                      <div style={{ fontSize: '0.9rem' }}>{formatDate(bill.createdAt)}</div>
+                    <td style={{ padding: '1rem 1.5rem', fontSize: '0.875rem', color: '#6b7280' }}>
+                      <div>{formatDate(bill.createdAt)}</div>
                     </td>
-                    <td style={{ padding: '1rem', textAlign: 'center' }}>
+                    <td style={{ padding: '1rem 1.5rem', textAlign: 'center' }}>
                       <button
                         onClick={() => handleDelete(bill._id)}
                         style={{
-                          padding: '0.5rem 0.75rem',
-                          background: '#ef4444',
-                          color: 'white',
-                          border: 'none',
-                          borderRadius: '0.5rem',
-                          fontSize: '0.85rem',
+                          padding: '0.375rem 0.75rem',
+                          background: '#fee2e2',
+                          color: '#dc2626',
+                          border: '1px solid #fecaca',
+                          borderRadius: '0.375rem',
+                          fontSize: '0.75rem',
                           fontWeight: '600',
                           cursor: 'pointer',
-                          transition: 'background 0.2s'
+                          transition: 'all 0.2s'
                         }}
-                        onMouseEnter={(e) => e.target.style.background = '#dc2626'}
-                        onMouseLeave={(e) => e.target.style.background = '#ef4444'}
+                        onMouseEnter={(e) => {
+                          e.target.style.background = '#dc2626';
+                          e.target.style.color = 'white';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.target.style.background = '#fee2e2';
+                          e.target.style.color = '#dc2626';
+                        }}
                       >
                         Delete
                       </button>
