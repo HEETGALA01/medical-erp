@@ -456,7 +456,7 @@ const Dashboard = () => {
           <div>
             <h1 style={{ 
               fontSize: '2rem', 
-              fontWeight: '800', 
+              fontWeight: '600', 
               color: '#ffffff', 
               marginBottom: '0.5rem',
               letterSpacing: '-0.025em'
@@ -716,7 +716,7 @@ const Dashboard = () => {
           }}
           >
             <div>
-              <div style={{ fontSize: '1.125rem', fontWeight: '800', color: '#111827', marginBottom: '0.25rem' }}>
+              <div style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827', marginBottom: '0.25rem' }}>
                 Register Patient
               </div>
               <div style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>
@@ -764,7 +764,7 @@ const Dashboard = () => {
           }}
           >
             <div>
-              <div style={{ fontSize: '1.125rem', fontWeight: '800', color: '#111827', marginBottom: '0.25rem' }}>
+              <div style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827', marginBottom: '0.25rem' }}>
                 Create Bill
               </div>
               <div style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: '500' }}>
@@ -805,7 +805,7 @@ const Dashboard = () => {
             }}>
               <h3 style={{ 
                 fontSize: '1.125rem', 
-                fontWeight: '800', 
+                fontWeight: '600', 
                 color: '#111827', 
                 marginBottom: '1.5rem',
                 display: 'flex',
@@ -829,7 +829,7 @@ const Dashboard = () => {
             }}>
               <h3 style={{ 
                 fontSize: '1.125rem', 
-                fontWeight: '800', 
+                fontWeight: '600', 
                 color: '#111827', 
                 marginBottom: '1.5rem',
                 display: 'flex',
@@ -854,7 +854,7 @@ const Dashboard = () => {
             }}>
               <h3 style={{ 
                 fontSize: '1.125rem', 
-                fontWeight: '800', 
+                fontWeight: '600', 
                 color: '#111827', 
                 marginBottom: '1.5rem',
                 display: 'flex',
@@ -891,7 +891,7 @@ const Dashboard = () => {
                       <div style={{ width: '10px', height: '10px', background: dept.color, borderRadius: '50%' }}></div>
                       <span style={{ fontSize: '0.875rem', color: '#374151', fontWeight: '600' }}>{dept.name}</span>
                     </div>
-                    <span style={{ fontSize: '0.875rem', fontWeight: '800', color: dept.color }}>{dept.value}%</span>
+                    <span style={{ fontSize: '0.875rem', fontWeight: '600', color: dept.color }}>{dept.value}%</span>
                   </div>
                 ))}
               </div>
@@ -911,7 +911,7 @@ const Dashboard = () => {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
               <h3 style={{ 
                 fontSize: '1.125rem', 
-                fontWeight: '800', 
+                fontWeight: '600', 
                 color: '#111827',
                 display: 'flex',
                 alignItems: 'center',
@@ -967,13 +967,13 @@ const Dashboard = () => {
                 <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0' }}>
                   <thead style={{ position: 'sticky', top: 0, zIndex: 10 }}>
                     <tr style={{ background: '#f9fafb' }}>
-                      <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '800', color: '#6b7280', textTransform: 'uppercase', borderBottom: '2px solid #e5e7eb' }}>ID</th>
-                      <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '800', color: '#6b7280', textTransform: 'uppercase', borderBottom: '2px solid #e5e7eb' }}>Name</th>
-                      <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '800', color: '#6b7280', textTransform: 'uppercase', borderBottom: '2px solid #e5e7eb' }}>Age</th>
-                      <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '800', color: '#6b7280', textTransform: 'uppercase', borderBottom: '2px solid #e5e7eb' }}>Gender</th>
-                      <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '800', color: '#6b7280', textTransform: 'uppercase', borderBottom: '2px solid #e5e7eb' }}>Contact</th>
-                      <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '800', color: '#6b7280', textTransform: 'uppercase', borderBottom: '2px solid #e5e7eb' }}>Registered</th>
-                      <th style={{ padding: '0.875rem 1.25rem', textAlign: 'right', fontSize: '0.75rem', fontWeight: '800', color: '#6b7280', textTransform: 'uppercase', borderBottom: '2px solid #e5e7eb' }}>Actions</th>
+                      <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', borderBottom: '2px solid #e5e7eb' }}>ID</th>
+                      <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', borderBottom: '2px solid #e5e7eb' }}>Name</th>
+                      <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', borderBottom: '2px solid #e5e7eb' }}>Age</th>
+                      <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', borderBottom: '2px solid #e5e7eb' }}>Gender</th>
+                      <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', borderBottom: '2px solid #e5e7eb' }}>Contact</th>
+                      <th style={{ padding: '0.875rem 1.25rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', borderBottom: '2px solid #e5e7eb' }}>Registered</th>
+                      <th style={{ padding: '0.875rem 1.25rem', textAlign: 'right', fontSize: '0.75rem', fontWeight: '600', color: '#6b7280', textTransform: 'uppercase', borderBottom: '2px solid #e5e7eb' }}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>

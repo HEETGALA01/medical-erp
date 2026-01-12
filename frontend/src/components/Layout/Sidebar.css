@@ -31,6 +31,18 @@ aside {
   }
 }
 
+/* Logo pulse animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
 /* Active icon containers pulse */
 aside a[style*="rgba(16, 185, 129, 0.15)"] > div:first-of-type {
   animation: iconGlow 2s ease-in-out infinite;

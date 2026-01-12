@@ -125,7 +125,7 @@ const Sidebar = () => {
       padding: '1.5rem 0',
       overflowY: 'auto'
     }}>
-      {/* Brand Section */}
+      {/* Brand Section with Modern Animated Logo */}
       <div style={{
         padding: '0 1.5rem 1.5rem 1.5rem',
         marginBottom: '1rem',
@@ -144,11 +144,58 @@ const Sidebar = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '1.75rem',
             boxShadow: '0 4px 20px rgba(16, 185, 129, 0.4), 0 0 40px rgba(16, 185, 129, 0.2)',
-            border: '1px solid rgba(16, 185, 129, 0.3)'
+            border: '1px solid rgba(16, 185, 129, 0.3)',
+            position: 'relative',
+            overflow: 'hidden'
           }}>
-            🏥
+            {/* Modern Animated Medical Logo SVG */}
+            <svg width="32" height="32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style={{ position: 'relative', zIndex: 2 }}>
+              {/* Heartbeat pulse line with animation */}
+              <defs>
+                <linearGradient id="pulseGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style={{ stopColor: '#ffffff', stopOpacity: 0.9 }} />
+                  <stop offset="50%" style={{ stopColor: '#d1fae5', stopOpacity: 1 }} />
+                  <stop offset="100%" style={{ stopColor: '#ffffff', stopOpacity: 0.9 }} />
+                </linearGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              
+              {/* Medical Cross with rounded edges */}
+              <g filter="url(#glow)">
+                <rect x="42" y="25" width="16" height="50" rx="3" fill="url(#pulseGradient)">
+                  <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite" />
+                </rect>
+                <rect x="25" y="42" width="50" height="16" rx="3" fill="url(#pulseGradient)">
+                  <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite" begin="0.5s" />
+                </rect>
+              </g>
+              
+              {/* Pulse circle animation */}
+              <circle cx="50" cy="50" r="35" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="2">
+                <animate attributeName="r" values="30;40;30" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.8;0;0.8" dur="2s" repeatCount="indefinite" />
+              </circle>
+            </svg>
+            
+            {/* Background pulse effect */}
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '100%',
+              height: '100%',
+              background: 'radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%)',
+              animation: 'pulse 2s infinite',
+              borderRadius: '0.75rem'
+            }} />
           </div>
           <div>
             <h2 style={{
