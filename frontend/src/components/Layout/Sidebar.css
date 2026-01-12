@@ -4,21 +4,60 @@ aside::-webkit-scrollbar {
 }
 
 aside::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(15, 23, 42, 0.5);
 }
 
 aside::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: rgba(16, 185, 129, 0.3);
   border-radius: 3px;
 }
 
 aside::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: rgba(16, 185, 129, 0.5);
 }
 
 /* Smooth transitions */
 aside {
   transition: transform 0.3s ease;
+}
+
+/* Icon Container Animations */
+@keyframes iconGlow {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.5);
+  }
+}
+
+/* Active icon containers pulse */
+aside a[style*="rgba(16, 185, 129, 0.15)"] > div:first-of-type {
+  animation: iconGlow 2s ease-in-out infinite;
+}
+
+/* SVG icon transitions */
+svg {
+  transition: all 0.3s ease;
+}
+
+/* Hover effect on SVG icons */
+aside a:hover svg {
+  transform: scale(1.1);
+  filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.3));
+}
+
+/* Active SVG icons with white stroke on gradient background */
+aside a[style*="rgba(16, 185, 129, 0.15)"] svg {
+  filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.4));
+}
+
+aside a[style*="rgba(16, 185, 129, 0.15)"] svg path,
+aside a[style*="rgba(16, 185, 129, 0.15)"] svg rect,
+aside a[style*="rgba(16, 185, 129, 0.15)"] svg circle,
+aside a[style*="rgba(16, 185, 129, 0.15)"] svg polyline,
+aside a[style*="rgba(16, 185, 129, 0.15)"] svg line {
+  stroke: white !important;
 }
 
 /* Responsive adjustments */
@@ -34,7 +73,12 @@ aside {
   }
   
   /* Hide text labels on mobile, show only icons */
-  aside a span:last-child {
+  aside a span:nth-of-type(2) {
+    display: none;
+  }
+  
+  /* Hide active indicator bar on mobile */
+  aside a > div:last-child {
     display: none;
   }
 }
