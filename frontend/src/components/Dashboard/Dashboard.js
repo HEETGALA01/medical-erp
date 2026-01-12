@@ -57,6 +57,39 @@ const Dashboard = () => {
     </svg>
   );
 
+  // Helper function to generate professional avatar URL with real human faces
+  const getAvatarUrl = (firstName, lastName, gender, index) => {
+    // Using This Person Does Not Exist API - AI-generated professional human faces
+    // These look like real professional headshots
+    
+    // Determine gender (default to male if not specified)
+    const genderLower = (gender || 'Male').toLowerCase();
+    const isMale = genderLower === 'male' || genderLower === 'm';
+    
+    // Using xsgames.co API which provides professional-looking AI generated faces
+    // Format: https://xsgames.co/randomusers/avatar.php?g=male or female
+    const genderParam = isMale ? 'male' : 'female';
+    
+    // Add unique seed to get different faces for different patients
+    const seed = Math.abs((`${firstName}${lastName}${index}`.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0)));
+    
+    // This provides professional, realistic human face photos with proper gender
+    return `https://xsgames.co/randomusers/assets/avatars/${genderParam}/${(seed % 78)}.jpg`;
+  };
+
+  // Helper function to capitalize names properly
+  const capitalizeName = (name) => {
+    if (!name) return '';
+    return name
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ');
+  };
+
+
   const { user } = useAuth();
   const [stats, setStats] = useState({
     todayPatients: 0,
@@ -947,8 +980,11 @@ const Dashboard = () => {
                     {recentPatients.map((patient, index) => {
                       if (!patient || (!patient.firstName && !patient.name)) return null;
                       
-                      const fullName = patient.name || `${patient.firstName || ''} ${patient.lastName || ''}`.trim();
+                      const firstName = capitalizeName(patient.firstName || patient.name?.split(' ')[0] || '');
+                      const lastName = capitalizeName(patient.lastName || patient.name?.split(' ')[1] || '');
+                      const fullName = `${firstName} ${lastName}`.trim() || 'Unknown';
                       const contactNumber = patient.contactNumber || patient.phoneNumber || 'N/A';
+                      const avatarUrl = getAvatarUrl(firstName, lastName, patient.gender, index);
                       
                       // Monochrome gray shades
                       const grayColors = ['#374151', '#4b5563', '#6b7280', '#9ca3af', '#1f2937'];
@@ -972,22 +1008,40 @@ const Dashboard = () => {
                           </td>
                           <td style={{ padding: '1rem 1.25rem' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                              <img 
+                                src={avatarUrl}
+                                alt={fullName}
+                                style={{ 
+                                  width: '40px', 
+                                  height: '40px', 
+                                  borderRadius: '50%',
+                                  border: '2px solid #e5e7eb',
+                                  objectFit: 'cover',
+                                  background: color
+                                }}
+                                onError={(e) => {
+                                  // Fallback if image fails to load
+                                  e.target.style.display = 'none';
+                                  e.target.nextSibling.style.display = 'flex';
+                                }}
+                              />
                               <div style={{ 
-                                width: '36px', 
-                                height: '36px', 
+                                width: '40px', 
+                                height: '40px', 
                                 borderRadius: '50%', 
                                 background: color,
-                                display: 'flex',
+                                display: 'none',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 color: '#ffffff',
                                 fontWeight: '700',
-                                fontSize: '0.875rem'
+                                fontSize: '0.875rem',
+                                border: '2px solid #e5e7eb'
                               }}>
-                                {fullName ? fullName.charAt(0).toUpperCase() : '?'}
+                                {firstName.charAt(0)}{lastName.charAt(0)}
                               </div>
                               <span style={{ fontSize: '0.875rem', fontWeight: '700', color: '#1f2937' }}>
-                                {fullName || 'Unknown'}
+                                {fullName}
                               </span>
                             </div>
                           </td>
