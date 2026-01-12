@@ -18,7 +18,6 @@ import ConsultationForm from './components/Consultations/ConsultationForm';
 import ConsultationView from './components/Consultations/ConsultationView';
 import PharmacyDashboard from './components/Pharmacy/PharmacyDashboard';
 import LaboratoryDashboard from './components/Laboratory/LaboratoryDashboard';
-import Navbar from './components/Layout/Navbar';
 import Sidebar from './components/Layout/Sidebar';
 import PrivateRoute from './components/Auth/PrivateRoute';
 
@@ -32,12 +31,11 @@ function AppLayout() {
   
   return (
     <>
-      {showLayout && <Navbar />}
       {showLayout && <Sidebar />}
       <div style={{
-        marginTop: showLayout ? '70px' : '0',
+        marginTop: 0,
         marginLeft: showLayout ? '260px' : '0',
-        minHeight: showLayout ? 'calc(100vh - 70px)' : '100vh',
+        minHeight: '100vh',
         background: '#f8fafc',
         padding: showLayout ? '2rem' : '0'
       }}>

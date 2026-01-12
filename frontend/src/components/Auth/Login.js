@@ -108,56 +108,9 @@ const Login = () => {
             )}
           </button>
         </form>
-        
-        <div className="divider">
-          <span className="divider-text">Quick Access</span>
-        </div>
-        
-        <div className="demo-credentials">
-          <div className="credentials-grid">
-            <div className="credential-card">
-              <div className="credential-icon">👨‍⚕️</div>
-              <div className="credential-info">
-                <span className="credential-label">Admin</span>
-                <span className="credential-value">admin / admin123</span>
-              </div>
-            </div>
-            <div className="credential-card">
-              <div className="credential-icon">👨‍⚕️</div>
-              <div className="credential-info">
-                <span className="credential-label">Doctor</span>
-                <span className="credential-value">doctor / doctor123</span>
-              </div>
-            </div>
-            <div className="credential-card">
-              <div className="credential-icon">🧪</div>
-              <div className="credential-info">
-                <span className="credential-label">Test</span>
-                <span className="credential-value">test / test</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div className="features-list">
-          <div className="feature-item">
-            <span className="feature-icon">✅</span>
-            <span className="feature-text">6 Complete Modules</span>
-          </div>
-          <div className="feature-item">
-            <span className="feature-icon">💾</span>
-            <span className="feature-text">Data Persistence</span>
-          </div>
-          <div className="feature-item">
-            <span className="feature-icon">₹</span>
-            <span className="feature-text">Indian Currency</span>
-          </div>
-          <div className="feature-item">
-            <span className="feature-icon">🎨</span>
-            <span className="feature-text">Modern UI/UX</span>
-          </div>
-        </div>
+
       </div>
+      
     </div>
   );
 };

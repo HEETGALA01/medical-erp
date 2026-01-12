@@ -12,6 +12,8 @@ Welcome to the **Medical Management System** - a comprehensive MERN stack applic
    - Usage guide
    - Troubleshooting
 
+   
+
 2. **[QUICKSTART.md](QUICKSTART.md)** - Quick setup guide (5 minutes)
    - Prerequisites
    - Installation steps
